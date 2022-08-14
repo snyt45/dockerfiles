@@ -1,0 +1,326 @@
+" ----------------------------------------------------------------------------
+" KEY MAPS
+" ----------------------------------------------------------------------------
+
+let mapleader = "\<Space>"
+
+" ヤンクレジスタを使って貼り付け
+noremap PP "0p
+
+" 行頭、行末の移動
+nnoremap H ^
+nnoremap L $
+
+" タブ
+nmap te :<C-u>tabedit<CR>
+nmap tt :<C-u>tab split<CR>
+nmap <S-Tab> :<C-u>tabprev<CR>
+nmap <Tab> :<C-u>tabnext<CR>
+nmap tn <C-w>:+tabmove<CR>
+nmap tp <C-w>:-tabmove<CR>
+
+" ウィンドウ分割を楽にする設定
+nnoremap ss :<C-u>sp<CR>
+nnoremap sv :<C-u>vs<CR>
+nnoremap sj <C-w>j
+nnoremap sk <C-w>k
+nnoremap sl <C-w>l
+nnoremap sh <C-w>h
+nnoremap sJ <C-w>J
+nnoremap sK <C-w>K
+nnoremap sL <C-w>L
+nnoremap sH <C-w>H
+nnoremap s> <C-w>>
+nnoremap s< <C-w><
+nnoremap s+ <C-w>+
+nnoremap s- <C-w>-
+
+" highlight off
+nnoremap <silent> <Esc><Esc> :<C-u>nohlsearch<CR><Esc>
+
+" These are things that I mistype and want ignored.
+noremap q <silent>
+
+" カレントバッファのファイルパスをクリップボードにコピー
+nnoremap <leader><C-g> :<C-u>echo "copied fullpath: " . expand('%:p') \| let @"=expand('%:p') \| call system('clip.exe', @")<CR>
+
+" Toggle quickfix
+if exists('g:__QUICKFIX_TOGGLE__')
+  finish
+endif
+let g:__QUICKFIX_TOGGLE__ = 1
+
+function! ToggleQuickfix()
+  let l:nr = winnr('$')
+  cwindow
+  let l:nr2 = winnr('$')
+  if l:nr == l:nr2
+    cclose
+  endif
+endfunction
+nnoremap <script> <silent> <Space>q :call ToggleQuickfix()<CR>
+
+" Terminal Normalモード/Jobモード トグル
+tmap <C-t><C-t> <C-W>N
+
+" accelerated-jk shortcut
+nmap j <Plug>(accelerated_jk_gj)
+nmap k <Plug>(accelerated_jk_gk)
+
+" netrw shorcut
+nnoremap <silent> <leader>e :Explore<CR>
+augroup vimrc_netrw
+  autocmd!
+  " h key is  Open file, change directory
+  autocmd FileType netrw nmap <buffer> h <CR>
+  " l key is  Open file, change directory
+  autocmd FileType netrw nmap <buffer> l <CR>
+augroup END
+
+" fzf.vim shortcut
+nnoremap <silent> <leader>r :History:<CR>
+nnoremap <silent> <leader>p :GFiles<CR>
+nnoremap <silent> <leader>g :GFiles?<CR>
+nnoremap <silent> <leader>f :Rg<CR>
+nnoremap <silent> <leader>b :Buffers<CR>
+nnoremap <silent> <leader>l :BLines<CR>
+nnoremap <silent> <leader>h :History<CR>
+nnoremap <silent> <leader>w :Windows<CR>
+
+" command :Rg override
+" 隠しファイルも検索対象に含める
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg -L --hidden --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
+
+" vim-fugitive shortcut
+nnoremap <silent> gs :Git<CR>
+nnoremap <silent> ga :Git add -A<CR>
+nnoremap <silent> gc :Git commit<CR>
+nnoremap <silent> gb :Git blame<CR>
+nnoremap <silent> gd :Git diff<CR>
+nnoremap <silent> gps :Git push<CR>
+nnoremap <silent> gpl :Git pull<CR>
+
+" Replace Browse cmd {{{
+" Browse command is used by fugitive instead of netrw, so we can get rid of
+" those Press <cr> to continue messages.
+" ref: https://github.com/leafgarland/vimfiles/blob/master/.vimrc#L1007-L1024
+function! Browse(url)
+  call system('cmd.exe /c start ' . a:url)
+endfunction
+command! -nargs=1 Browse :call Browse(<q-args>)
+nnoremap gx :Browse <C-R><C-f><CR>
+"}}}
+
+" gv.vim
+nnoremap <silent> gl :GV<CR>
+nnoremap <silent> gll :GV!<CR>
+
+" vim-lsp shortcut
+function! s:on_lsp_buffer_enabled() abort
+  nmap <buffer> ld <plug>(lsp-definition)
+  nmap <buffer> ldd <plug>(lsp-document-diagnostics)
+  nmap <buffer> lf <plug>(lsp-document-format)
+  nmap <buffer> lh <plug>(lsp-hover)
+  nmap <buffer> lr <plug>(lsp-rename)
+
+  " asyncomplete.vim
+  let g:asyncomplete_popup_delay = 100
+endfunction
+
+augroup vimrc_vim_lsp
+  autocmd!
+  autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END
+
+" asyncomplete.vim shortcut
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
+
+" vim-edgemotion shortcut
+map <C-j> <Plug>(edgemotion-j)
+map <C-k> <Plug>(edgemotion-k)
+
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+
+" ----------------------------------------------------------------------------
+" SETTINGS
+" ----------------------------------------------------------------------------
+
+" Search Text highlight
+set hlsearch
+set incsearch
+
+set encoding=utf-8
+set number
+set laststatus=2
+set virtualedit=block
+set wildmenu
+set noswapfile
+set nobackup
+set noundofile
+set tabstop=2
+set expandtab
+set smartindent
+set shiftwidth=2
+" set mouse=a
+
+" コードの折りたたみ
+set foldmethod=indent
+set foldlevel=100
+
+" https://qiita.com/Linda_pp/items/9e0c94eb82b18071db34
+if has('vim_starting')
+    " 挿入モード時に非点滅の縦棒タイプのカーソル
+    let &t_SI .= "\e[6 q"
+    " ノーマルモード時に非点滅のブロックタイプのカーソル
+    let &t_EI .= "\e[2 q"
+    " 置換モード時に非点滅の下線タイプのカーソル
+    let &t_SR .= "\e[4 q"
+endif
+
+" Clipboard
+augroup Yank
+  au!
+  autocmd TextYankPost * :call system('clip.exe', @")
+augroup END
+
+" タブ、空白を可視化
+set list
+set listchars=tab:»-,extends:»,precedes:«
+
+" 全角スペースと行末の半角スペースを赤くする
+augroup highlightSpace
+  autocmd!
+  autocmd Colorscheme * hi IdeographicSpace term=underline ctermbg=DarkRed guibg=DarkRed
+  autocmd VimEnter,WinEnter * match IdeographicSpace /　\|\s\+$/
+augroup END
+
+" :grep時にripgrepを使用する
+if executable('rg')
+  let &grepprg = 'rg --vimgrep --hidden'
+  set grepformat=%f:%l:%c:%m
+endif
+
+" ----------------------------------------------------------------------------
+" PLUGINS
+" ----------------------------------------------------------------------------
+
+call plug#begin('~/.vim/plugged')
+
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'pechorin/any-jump.vim'
+Plug 'airblade/vim-rooter'
+Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
+Plug 'junegunn/gv.vim'
+Plug 'hotwatermorning/auto-git-diff'
+Plug 'itchyny/lightline.vim'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'mattn/vim-lsp-settings'
+Plug 'mattn/vim-lsp-icons'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
+Plug 'tpope/vim-rails'
+Plug 'othree/html5.vim'
+Plug 'pangloss/vim-javascript'
+Plug 'evanleck/vim-svelte', {'branch': 'main'}
+Plug 'turbio/bracey.vim', {'do': 'npm install --prefix server'}
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npm install'  }
+Plug 'dhruvasagar/vim-table-mode'
+Plug 'mattn/vim-maketable'
+Plug 'morhetz/gruvbox'
+Plug 'rhysd/accelerated-jk'
+Plug 'haya14busa/vim-edgemotion'
+Plug 'unblevable/quick-scope'
+Plug 'mattn/vim-sonictemplate'
+Plug 'alvan/vim-closetag'
+Plug 'andymass/vim-matchup'
+Plug 'junegunn/vim-easy-align'
+Plug 'AndrewRadev/linediff.vim'
+Plug 'skanehira/translate.vim'
+Plug 'vim-jp/vimdoc-ja'
+
+call plug#end()
+
+" ----------------------------------------------------------------------------
+" PLUGIN SETTINGS
+" ----------------------------------------------------------------------------
+
+set background=dark
+colorscheme gruvbox
+
+" vimdoc-ja
+set helplang=ja,en
+
+" vim-gitgutter
+" Always show sign column
+set signcolumn=yes
+
+" By default updatetime is 4000 ms
+set updatetime=100
+
+" Use fontawesome icons as signs
+let g:gitgutter_sign_added = '+'
+let g:gitgutter_sign_modified = '>'
+let g:gitgutter_sign_removed = '-'
+let g:gitgutter_sign_removed_first_line = '^'
+let g:gitgutter_sign_modified_removed = '<'
+
+" Default key mapping off
+" let g:gitgutter_map_keys = 0
+
+" Execute after loading the color schema
+" https://teratail.com/questions/29844#reply-46767
+augroup vimrc_vim_gitgutter
+  autocmd!
+  " sign column bg color
+  autocmd VimEnter,ColorScheme * highlight SignColumn guibg=NONE ctermbg=NONE
+
+  " sign column color
+  autocmd VimEnter,ColorScheme * highlight GitGutterAdd guibg=NONE ctermbg=NONE guifg=#000900 ctermfg=2
+  autocmd VimEnter,ColorScheme * highlight GitGutterChange guibg=NONE ctermbg=NONE guifg=#bbbb00 ctermfg=3
+  autocmd VimEnter,ColorScheme * highlight GitGutterDelete guibg=NONE ctermbg=NONE guifg=#ff2222 ctermfg=1
+augroup END
+
+" lightline.vim
+set showtabline=2
+let g:lightline = {
+      \ 'colorscheme': 'gruvbox',
+      \ 'tabline': {
+      \   'left': [['tabs']],
+      \   'right': [['gitbranch']],
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead'
+      \ },
+      \ }
+
+" netrw
+" ヘッダを非表示にする
+let g:netrw_banner=0
+" プレビューウィンドウを垂直分割で表示する
+let g:netrw_preview=1
+" 垂直分割時に分割ウィンドウを右に開く
+let g:netrw_altv=1
+let g:netrw_winsize=80
+
+" fzf.vim
+let g:fzf_preview_window = ['down:60%', 'ctrl-/']
+
+" bracey.vim
+let g:bracey_browser_command = 'cmd.exe /c start'
+
+" translate.vim
+let g:translate_popup_window = 0
