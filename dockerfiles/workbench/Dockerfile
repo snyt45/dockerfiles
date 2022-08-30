@@ -34,20 +34,37 @@ RUN apt update && apt upgrade -y && \
       golang \
       python3-pip \
       shellcheck
+# Docker
+# ref: https://matsuand.github.io/docs.docker.jp.onthefly/engine/install/ubuntu/
+# リポジトリのセットアップ
+RUN apt update && \
+    apt install -y \
+      ca-certificates \
+      curl \
+      gnupg \
+      lsb-release
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+RUN echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+# Docker Engineのインストール
+RUN apt update && \
+    apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
 ########################################################################################################################
 # ユーザー作成 & 切替
 ########################################################################################################################
 # rootユーザーのパスワードをrootに設定。rootユーザーに切替えたいとき用。
-# グループ作成(gid: ${local_gid}、グループ名: ${local_whoami})
+RUN echo "root:root" | chpasswd
+# ホストと同じユーザーグループ作成(gid: ${local_gid}、グループ名: ${local_whoami})
+RUN groupadd -g ${local_gid} ${local_whoami}
 # ユーザー作成(uidが同じユーザーの作成を許す、ホームディレクトリ作成する、uid: ${local_uid}、gid(primary): ${local_gid}、 gid(secondary): sudo、ユーザー名: ${local_whoami})
+RUN useradd -o -m -u ${local_uid} -g ${local_gid} -G sudo ${local_whoami}
 # 作成したユーザーのパスワードを${password}に設定
+RUN echo ${local_whoami}:${password} | chpasswd
 # 作成したユーザーがパスワードなしでsudoコマンドを実行できるようにする
-RUN echo "root:root" | chpasswd && \
-    groupadd -g ${local_gid} ${local_whoami} && \
-    useradd -o -m -u ${local_uid} -g ${local_gid} -G sudo ${local_whoami} && \
-    echo ${local_whoami}:${password} | chpasswd && \
-    echo "${local_whoami} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+RUN echo "${local_whoami} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
 USER ${local_whoami}
 WORKDIR /home/${local_whoami}/
 
@@ -70,6 +87,8 @@ RUN sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/dow
 ########################################################################################################################
 # ファイル追加・権限
 ########################################################################################################################
+ADD ./entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN sudo chmod +x /usr/local/bin/entrypoint.sh
 ADD ./dotfiles /etc/dotfiles
 RUN sudo chmod +x /etc/dotfiles/bin/ide
 RUN sudo chmod +x /etc/dotfiles/bin/clip.sh
@@ -122,4 +141,6 @@ ENV LANG ja_JP.UTF-8
 ENV LANGUAGE ja_JP.UTF-8
 ENV LC_ALL=ja_JP.UTF8
 
-ENTRYPOINT ["/bin/bash"]
+# docker run実行時に毎回実行する
+# docker run時に環境変数やdocker.sockをマウントするため、このタイミングでdocker.sockなどに対して設定している
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

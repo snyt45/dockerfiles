@@ -19,10 +19,10 @@ buildopt+= --build-arg local_gid=$(shell id -g ${USER})
 buildopt+= --build-arg local_home=$(HOME)
 # ローカルのwhoamiを渡す
 buildopt+= --build-arg local_whoami=$(shell whoami)
-# ローカルのdockerのgidを渡す
-buildopt+= --build-arg local_docker_gid=$(shell getent group docker | awk -F: '{print $$3}')
 
 ## docker run時のオプション
+# 環境変数 LOCAL_GID LOCAL_HOME LOCAL_WHOAMI LOCAL_DOCKER_GID
+runopt= -e LOCAL_GID=$(shell id -u ${USER}) -e LOCAL_HOME=$(HOME) -e LOCAL_WHOAMI=$(shell whoami) -e LOCAL_DOCKER_GID=$(shell getent group docker | awk -F: '{print $$3}')
 # マウントオプション work
 runopt+= --mount type=bind,src=$(HOME)/work,dst=$(HOME)/work
 # マウントオプション shared_cache
