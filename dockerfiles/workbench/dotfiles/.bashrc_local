@@ -13,6 +13,7 @@ if command -v starship &> /dev/null; then eval "$(starship init bash)"; fi;
 
 # zoxide
 if command -v zoxide &> /dev/null; then eval "$(zoxide init bash)"; fi;
+export _ZO_DATA_DIR="$HOME/.shared_cache/zoxide/"
 
 # volta
 export VOLTA_HOME="$HOME/.volta"
