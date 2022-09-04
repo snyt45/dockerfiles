@@ -14,6 +14,8 @@
 
 ![](https://firebasestorage.googleapis.com/v0/b/firescript-577a2.appspot.com/o/imgs%2Fapp%2Fyuta_sano%2FiTuwXT4XTL.png?alt=media&token=46f74504-38db-4931-aa27-fe3bfe76e05c)
 
+![](https://firebasestorage.googleapis.com/v0/b/firescript-577a2.appspot.com/o/imgs%2Fapp%2Fyuta_sano%2F5juDiFU-aK.png?alt=media&token=1af66f99-95ca-49c4-bbce-d8fa6b83ad27)
+
 ## セットアップ
 
 0. WSL2セットアップ
