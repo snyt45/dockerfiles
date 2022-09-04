@@ -343,8 +343,8 @@ let g:lsp_settings_servers_dir='~/.shared_cache/.vim/servers'
 
 " efm-langserverが未インストールの場合インストールする
 function! s:check_install_efm_langserver()
-  if !filereadable(expand(g:lsp_settings_servers_dir . "/efm-langserver/efm-langserver"))
-    LspInstallServer efm-langserver | source $MYVIMRC
+  if !filereadable(expand(g:lsp_settings_servers_dir . '/efm-langserver/efm-langserver'))
+    LspInstallServer efm-langserver
   endif
 endfunction
 
@@ -467,7 +467,7 @@ nnoremap <silent> lt :<C-u>LspTypeDefinition<CR>
 " 全実装とインターフェースを見つける
 nnoremap <silent> li :<C-u>LspImplementation<CR>
 " ファイルの診断結果をquickfixに表示
-nnoremap <silent> <Leader>ll :<C-u>LspDocumentDiagnostics<CR>
+nnoremap <silent> ldd :<C-u>LspDocumentDiagnostics<CR>
 " エラー、警告、情報、ヒントを含む次の診断にジャンプ
 nnoremap <silent> ]g :LspNextDiagnostic<CR>
 " エラー、警告、情報、ヒントを含む前の診断にジャンプ
@@ -477,9 +477,9 @@ nnoremap <silent> ]e :LspNextError<CR>
 " 前のエラーにジャンプ
 nnoremap <silent> [e :LspPreviousError<CR>
 " カーソル下のシンボルの名前を変更
-nnoremap <silent>lr :LspRename<CR>
+nnoremap <silent> lrr :LspRename<CR>
 " カーソル下のシンボルの情報をフロート表示
-nnoremap <silent>lh :LspHover<CR>
+nnoremap <silent> lhh :LspHover<CR>
 
 " }}}
 
