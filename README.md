@@ -30,7 +30,26 @@
 git clone https://github.com/snyt45/dockerfiles.git ~/.dockerfiles
 ```
 
-2. Requirement
+2. Options
+```
+# メインで使うアカウントを設定する（グローバル設定）
+git config --global user.name "global"
+git config --global user.email "global@example.com"
+
+# サブで使うアカウントを設定する（リポジトリごとの設定）
+git config user.name "local"
+git config user.email "local@example.com"
+
+# Git Credential Manager
+git config --global credential.helper "/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager-core.exe"
+git config --global credential.useHttpPath true
+
+# エイリアスを追加
+echo "alias g='git'" >> ~/.bashrc
+source ~/.bashrc
+```
+
+3. Requirement
 
 ```
 sudo apt install make
