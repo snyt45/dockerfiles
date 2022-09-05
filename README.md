@@ -20,42 +20,54 @@
 
 ## セットアップ
 
-0. WSL2セットアップ
+### 前提
 
-参考：https://github.com/snyt45/windows11-dotfiles#4-wsl2%E3%81%AE%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97%E3%82%92%E8%A1%8C%E3%81%86
+WSL2セットアップ済みであること。
 
-1. Download
+セットアップ方法は[こちら](https://github.com/snyt45/windows11-dotfiles#6-wsl2%E3%81%AE%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97%E3%82%92%E8%A1%8C%E3%81%86)
 
-```
-git clone https://github.com/snyt45/dockerfiles.git ~/.dockerfiles
-```
+### 1. Git Setting
 
-2. Options
 ```
 # メインで使うアカウントを設定する（グローバル設定）
 git config --global user.name "global"
 git config --global user.email "global@example.com"
 
-# サブで使うアカウントを設定する（リポジトリごとの設定）
-git config user.name "local"
-git config user.email "local@example.com"
-
 # Git Credential Manager
 git config --global credential.helper "/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager-core.exe"
 git config --global credential.useHttpPath true
+
+# Editor
+git config --global core.editor vim
 
 # エイリアスを追加
 echo "alias g='git'" >> ~/.bashrc
 source ~/.bashrc
 ```
 
-3. Requirement
+### 2. Clone
 
 ```
+git clone https://github.com/snyt45/dockerfiles.git ~/.dockerfiles
+```
+
+
+### 3. Requirement
+
+```
+sudo apt update && sudo apt upgrade
 sudo apt install make
 ```
 
-3. 共有用ディレクトリを作成する
+### 4. Options
+
+```
+sudo apt install zoxide
+echo 'eval "$(zoxide init bash)"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### 5. 共有用ディレクトリを作成する
 
 ```
 mkdir -p ~/work/ && mkdir -p ~/.shared_cache/
@@ -65,6 +77,30 @@ mkdir -p ~/work/ && mkdir -p ~/.shared_cache/
 | --- | --- |
 | ~/work/ | 作業データ共有用のディレクトリ |
 | ~/.shared_cache/ | 作業用コンテナで作業時のキャッシュを残すためのディレクトリ |
+
+### 6. クリップボード対応
+参考：https://snyt45.com/uzCcEFHUw
+
+Install
+
+```
+sudo apt install socat
+```
+
+ ~/.bashrcに追加
+
+```
+if [[ $(command -v socat > /dev/null; echo $?) == 0 ]]; then
+    # Start up the socat forwarder to clip.exe
+    ALREADY_RUNNING=$(ps -auxww | grep -q "[l]isten:8121"; echo $?)
+    if [[ $ALREADY_RUNNING != "0" ]]; then
+        echo "Starting clipboard relay..."
+        (setsid socat tcp-listen:8121,fork,bind=0.0.0.0 EXEC:'clip.exe' &) > /dev/null 2>&1
+    else
+        echo "Clipboard relay already running"
+    fi
+fi
+```
 
 ## 基本的なワークフロー
 
@@ -86,36 +122,11 @@ make target="workbench"
 
 ```
 make stop target="workbench"
-make repopull target="workbench"
 make build target="workbench"
 make target="workbench"
 ```
 
-## クリップボード対応
-参考：https://snyt45.com/uzCcEFHUw
-
-1. Install
-
-```
-sudo apt install socat
-```
-
-2. ~/.bashrcに追加
-
-```
-if [[ $(command -v socat > /dev/null; echo $?) == 0 ]]; then
-    # Start up the socat forwarder to clip.exe
-    ALREADY_RUNNING=$(ps -auxww | grep -q "[l]isten:8121"; echo $?)
-    if [[ $ALREADY_RUNNING != "0" ]]; then
-        echo "Starting clipboard relay..."
-        (setsid socat tcp-listen:8121,fork,bind=0.0.0.0 EXEC:'clip.exe' &) > /dev/null 2>&1
-    else
-        echo "Clipboard relay already running"
-    fi
-fi
-```
-
-## 作業用コンテナでアプリケーションサーバを起動する
+### 作業用コンテナでアプリケーションサーバを起動する
 作業用コンテナで起動したアプリケーションサーバにlocalhostでアクセスするためには以下の2点を実施する必要があります。
 
 - `docker container run`時、`-p`オプションでコンテナのポート割り当てをする
