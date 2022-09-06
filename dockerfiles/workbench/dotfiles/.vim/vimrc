@@ -479,7 +479,7 @@ nnoremap <silent> [e :LspPreviousError<CR>
 " カーソル下のシンボルの名前を変更
 nnoremap <silent> lrr :LspRename<CR>
 " カーソル下のシンボルの情報をフロート表示
-nnoremap <silent> lhh :LspHover<CR>
+nnoremap <silent> K :LspHover<CR>
 
 " }}}
 
