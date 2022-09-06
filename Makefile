@@ -29,6 +29,8 @@ runopt+= --mount type=bind,src=$(HOME)/work,dst=$(HOME)/work
 runopt+= --mount type=bind,src=$(HOME)/.shared_cache,dst=$(HOME)/.shared_cache
 # マウントオプション docker socket
 runopt+= --mount type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock
+# マウントオプション ssh
+runopt+= --mount type=bind,src=$(HOME)/.ssh,dst=$(HOME)/.ssh
 # ポートフォワーディングオプション
 # 作業用コンテナ内で起動したサーバーにアクセスできるようにコンテナのポートを公開しておく ※必要に応じて追加する
 runopt+= -p 127.0.0.1:3030:3030

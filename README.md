@@ -29,18 +29,11 @@ WSL2セットアップ済みであること。
 ### 1. Git Setting
 
 ```
-# メインで使うアカウントを設定する（グローバル設定）
 git config --global user.name "global"
 git config --global user.email "global@example.com"
 
-# Git Credential Manager
-git config --global credential.helper "/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager-core.exe"
-git config --global credential.useHttpPath true
-
-# Editor
 git config --global core.editor vim
 
-# エイリアスを追加
 echo "alias g='git'" >> ~/.bashrc
 source ~/.bashrc
 ```
@@ -78,7 +71,57 @@ mkdir -p ~/work/ && mkdir -p ~/.shared_cache/
 | ~/work/ | 作業データ共有用のディレクトリ |
 | ~/.shared_cache/ | 作業用コンテナで作業時のキャッシュを残すためのディレクトリ |
 
-### 6. クリップボード対応
+### 6. Git認証用のSSHディレクトリを作成する
+
+参考：https://mykii.blog/use-many-github-accounts-by-ssh/
+
+```
+# メインアカウントのSSH鍵を作成
+mkdir -p ~/.ssh && cd ~/.ssh
+ssh-keygen -t ed25519 -C "メインアカウントのメールアドレス" -f "メインアカウントのファイル名"
+cat {メインアカウントのファイル名}.pub # GitHubのSSH鍵に登録
+
+# サブアカウントのSSH鍵を作成
+ssh-keygen -t ed25519 -C "サブアカウントのメールアドレス" -f "サブアカウントのファイル名"
+cat {サブアカウントのファイル名}.pub # GitHubのSSH鍵に登録
+```
+
+```
+vim ~/.ssh/config
+```
+
+config
+```
+Host github-{メインアカウント用の名前}
+	HostName github.com
+	User {メインアカウントのユーザー名}
+	IdentityFile ~/.ssh/{メインアカウントの秘密鍵}
+	IdentitiesOnly yes
+Host github-{サブアカウント用の名前}
+	HostName github.com
+	User {サブアカウントのユーザー名}
+	IdentityFile ~/.ssh/{サブアカウントの秘密鍵}
+	IdentitiesOnly yes
+```
+
+```
+# 作成確認
+ssh -T git@github-{メインアカウント用の名前}
+ssh -T git@github-{サブアカウント用の名前}
+
+# clone
+cd ~/work
+
+git clone git@github-{メインアカウント用の名前}:{ID}/{リポジトリ名}.git
+git clone git@github-{サブアカウント用の名前}:{ID}/{リポジトリ名}.git
+```
+
+
+| Dir | 説明 |
+| --- | --- |
+| ~/.ssh/ | Git認証用のSSH鍵を置くディレクトリ |
+
+### 7. クリップボード対応
 参考：https://snyt45.com/uzCcEFHUw
 
 Install
