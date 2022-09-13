@@ -133,7 +133,7 @@ sudo apt install socat
  ~/.bashrcに追加
 
 ```
-cat <<SETTING >> ~/.bashrc
+cat <<'SETTING' >> ~/.bashrc
 if [[ $(command -v socat > /dev/null; echo $?) == 0 ]]; then
     # Start up the socat forwarder to clip.exe
     ALREADY_RUNNING=$(ps -auxww | grep -q "[l]isten:8121"; echo $?)
