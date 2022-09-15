@@ -92,6 +92,7 @@ RUN sudo chmod +x /usr/local/bin/entrypoint.sh
 ADD ./dotfiles /etc/dotfiles
 RUN sudo chmod +x /etc/dotfiles/bin/ide
 RUN sudo chmod +x /etc/dotfiles/bin/clip.sh
+RUN sudo chmod +x /etc/dotfiles/bin/code
 
 ########################################################################################################################
 # shared directory
@@ -120,6 +121,7 @@ RUN ln -sf /etc/dotfiles/.bashrc /home/${local_whoami}/ && \
 # bin
 RUN sudo ln -s /etc/dotfiles/bin/ide /usr/local/bin/
 RUN sudo ln -s /etc/dotfiles/bin/clip.sh /usr/local/bin/
+RUN sudo ln -s /etc/dotfiles/bin/code /usr/local/bin/
 RUN sudo ln -s /home/${local_whoami}/.local/bin/vint /usr/local/bin/
 # deno
 RUN sudo ln -s /home/${local_whoami}/.deno/bin/deno /usr/local/bin/deno

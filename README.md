@@ -122,6 +122,9 @@ git clone git@github-{サブアカウント用の名前}:{ID}/{リポジトリ�
 | ~/.ssh/ | Git認証用のSSH鍵を置くディレクトリ |
 
 ### 7. クリップボード対応
+作業コンテナ内のクリップボードをホスト側に共有するための対応です。
+※Vimでヤンクした内容は自動でホスト側に共有するようにvimrcに設定済みです。
+
 参考：https://snyt45.com/uzCcEFHUw
 
 Install
@@ -142,6 +145,33 @@ if [[ $(command -v socat > /dev/null; echo $?) == 0 ]]; then
         (setsid socat tcp-listen:8121,fork,bind=0.0.0.0 EXEC:'clip.exe' &) > /dev/null 2>&1
     else
         echo "Clipboard relay already running"
+    fi
+fi
+SETTING
+```
+
+### 8. VSCode対応
+作業コンテナ内で`code .`を実行すると、ホスト側で`code .`を実行するための対応です。
+※ホスト側で`code .`を実行する仕組みのため、コンテナとホスト側でバインドマウントしているディレクトリのみ開けます。
+
+Install
+
+```
+sudo apt install socat
+```
+
+ ~/.bashrcに追加
+
+```
+cat <<'SETTING' >> ~/.bashrc
+if [[ $(command -v socat > /dev/null; echo $?) == 0 ]]; then
+    # Start up the socat forwarder to VScode
+    ALREADY_RUNNING_VSCODE=$(ps -auxww | grep -q "[l]isten:8122"; echo $?)
+    if [[ $ALREADY_RUNNING_VSCODE != "0" ]]; then
+        echo "Starting VScode relay..."
+        (setsid socat tcp-listen:8122,fork,bind=0.0.0.0 EXEC:'/bin/bash' &) > /dev/null 2>&1
+    else
+        echo "VScode relay already running"
     fi
 fi
 SETTING

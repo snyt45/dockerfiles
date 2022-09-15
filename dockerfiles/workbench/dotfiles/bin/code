@@ -1,0 +1,10 @@
+#!/bin/bash
+for i in "$@"
+do
+  case "$i" in
+  (.)
+    echo "code $PWD" | socat - tcp:host.docker.internal:8122
+    exit 0
+    ;;
+  esac
+done
