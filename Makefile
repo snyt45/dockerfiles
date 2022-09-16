@@ -40,10 +40,7 @@ all: repopull start attach ## [Default] repopull -> start -> attach の順に実
 
 .PHONY: repopull
 repopull: ## dockerfilesのrepoをgit pull
-# targetと同じコンテナ名が存在しない場合
-ifeq ($(shell docker ps -aq -f name="$(TGT)"), )
 	git pull
-endif
 
 .PHONY: build
 build: ## docker imageをbuild
