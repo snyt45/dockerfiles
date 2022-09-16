@@ -4,9 +4,6 @@
 
 " Display {{{
 
-" colorschemeがdarkグループの配色を使うように指定
-set background=dark
-
 " 画面左端に行番号を表示
 set number
 " 画面左端にサイン列を常に表示
@@ -165,6 +162,9 @@ call plug#begin('~/.shared_cache/.vim/plugged')
 
 " Basic {{{
 
+" カラースキーマ
+Plug 'morhetz/gruvbox'
+
 " Vimのヘルプを日本語化
 Plug 'vim-jp/vimdoc-ja'
 
@@ -241,6 +241,13 @@ augroup END
 " ----------------------------------------------------------------------------
 " PLUGIN SETTINGS
 " ----------------------------------------------------------------------------
+" colorscheme {{{
+
+" colorschemeがdarkグループの配色を使うように指定
+set background=dark
+colorscheme gruvbox
+
+" }}}
 
 " vimdoc-ja {{{
 
