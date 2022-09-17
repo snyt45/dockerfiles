@@ -139,14 +139,17 @@ sudo apt install socat
 cat <<'SETTING' >> ~/.bashrc
 if [[ $(command -v socat > /dev/null; echo $?) == 0 ]]; then
     # Start up the socat forwarder to clip.exe
-    ALREADY_RUNNING=$(ps -auxww | grep -q "[l]isten:8121"; echo $?)
-    if [[ $ALREADY_RUNNING != "0" ]]; then
-        echo "Starting clipboard relay..."
-        (setsid socat tcp-listen:8121,fork,bind=0.0.0.0 EXEC:'clip.exe' &) > /dev/null 2>&1
-    else
-        echo "Clipboard relay already running"
-    fi
+    echo "Starting clipboard relay..."
+    (setsid socat tcp-listen:8121,fork,bind=0.0.0.0 EXEC:'clip.exe' &) > /dev/null 2>&1
 fi
+# bashを開いて1度目は日本語のコピーがうまくいく
+# bashを閉じて再度開くとsocatの子プロセスが動いたままのためなのかなぜか日本語のコピー時に文字化けする
+# bashを閉じるときにsocatの子プロセスをkillして、開くたびにsocatの子プロセスを作るようにすると文字化け問題が解消したので毎回bashを閉じるとkillしている
+function hndl_SIGHUP() {
+  kill -9 $(lsof -t -i :8121)
+  exit 1
+}
+trap hndl_SIGHUP SIGHUP
 SETTING
 ```
 
