@@ -326,9 +326,9 @@ let g:lsp_diagnostics_echo_cursor = 1
 " カーソル下のエラー、警告、情報、ヒントをフロート表示
 let g:lsp_diagnostics_float_cursor = 1
 
-" 画面左端のサイン列にコードアクションのアイコンを表示
-let g:lsp_document_code_action_signs_enabled = 1
-let g:lsp_document_code_action_signs_hint = {'text': '🅰️'}
+" 画面左端のサイン列にコードアクションのアイコン非表示
+let g:lsp_document_code_action_signs_enabled = 0
+" let g:lsp_document_code_action_signs_hint = {'text': '🅰️'}
 
 let g:lsp_diagnostics_echo_delay = 50
 let g:lsp_diagnostics_highlights_delay = 50
