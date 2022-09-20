@@ -191,6 +191,9 @@ Plug 'lambdalisue/fern.vim'
 Plug 'lambdalisue/fern-renderer-nerdfont.vim' " ファイル横にアイコン表示
 Plug 'lambdalisue/fern-git-status.vim' " ファイル横にGitの状態表示
 
+" フロートウィンドウでターミナルを開く
+Plug 'voldikss/vim-floaterm'
+
 " }}}
 
 " Require denops.vim {{{
@@ -432,6 +435,15 @@ nnoremap <silent> <Leader>w :Windows!<CR>
 nnoremap <Leader>e :<C-u>Fern . -drawer -stay -keep -toggle -reveal=%<CR>
 
 " }}}
+
+" vim-floaterm {{{
+
+" lazygitを開く
+nnoremap <silent> <Leader>lz :FloatermNew --autoclose=2 --height=0.9 --width=0.9 lazygit<CR>
+" ターミナルを開く
+nnoremap <silent> <Leader>lt :FloatermNew --autoclose=2 --height=0.9 --width=0.9<CR>
+
+" "}}}
 
 " vim-lsp {{{
 
