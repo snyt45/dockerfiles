@@ -83,6 +83,15 @@ RUN ["/bin/bash", "-l", "-c", "npm install -g markdownlint-cli"]
 RUN ["/bin/bash", "-l", "-c", "pip install vim-vint"]
 RUN sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.10.0/hadolint-Linux-x86_64 && \
     sudo chmod +x /bin/hadolint
+# lazygit
+RUN LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[0-35.]+') && \
+    curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" && \
+    sudo tar xf lazygit.tar.gz -C /usr/local/bin lazygit
+# delta
+RUN sudo wget https://github.com/dandavison/delta/releases/download/0.4.1/delta-0.4.1-x86_64-unknown-linux-musl.tar.gz && \
+    sudo tar -zxvf delta-0.4.1-x86_64-unknown-linux-musl.tar.gz && \
+    cd delta-0.4.1-x86_64-unknown-linux-musl && \
+    sudo mv ./delta /usr/local/bin
 
 ########################################################################################################################
 # ファイル追加・権限
@@ -125,6 +134,9 @@ RUN sudo ln -s /etc/dotfiles/bin/code /usr/local/bin/
 RUN sudo ln -s /home/${local_whoami}/.local/bin/vint /usr/local/bin/
 # deno
 RUN sudo ln -s /home/${local_whoami}/.deno/bin/deno /usr/local/bin/deno
+# lazygit
+RUN mkdir -p /home/${local_whoami}/.config/lazygit && \
+    ln -s /etc/dotfiles/.config/lazygit/config.yml /home/${local_whoami}/.config/lazygit
 
 ########################################################################################################################
 # permission
