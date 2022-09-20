@@ -303,10 +303,10 @@ let g:fern#default_hidden=1
 let g:fern#renderer='nerdfont'
 
 " Vim起動時にfernを開く
-augroup vimrc_fern
-  autocmd!
-  autocmd VimEnter * ++nested Fern . -drawer -stay -keep -toggle -reveal=%
-augroup END
+" augroup vimrc_fern
+"   autocmd!
+"   autocmd VimEnter * ++nested Fern . -drawer -stay -keep -toggle -reveal=%
+" augroup END
 
 " }}}
 
