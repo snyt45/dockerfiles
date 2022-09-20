@@ -194,6 +194,9 @@ Plug 'lambdalisue/fern-git-status.vim' " ファイル横にGitの状態表示
 " フロートウィンドウでターミナルを開く
 Plug 'voldikss/vim-floaterm'
 
+" コミット履歴を調べる
+Plug 'rhysd/git-messenger.vim' " default key <leader>gm
+
 " }}}
 
 " Require denops.vim {{{
@@ -310,6 +313,13 @@ let g:fern#renderer='nerdfont'
 "   autocmd!
 "   autocmd VimEnter * ++nested Fern . -drawer -stay -keep -toggle -reveal=%
 " augroup END
+
+" }}}
+
+" git-messenger.vim {{{
+
+" ポップアップにカーソルを常に表示
+let g:git_messenger_always_into_popup = 1
 
 " }}}
 
