@@ -197,9 +197,6 @@ Plug 'vim-denops/denops.vim'
 " 選択範囲を翻訳
 Plug 'skanehira/denops-translate.vim'
 
-" Git操作
-Plug 'lambdalisue/gin.vim'
-
 " }}}
 
 " Coding Support {{{
@@ -430,35 +427,6 @@ nnoremap <silent> <Leader>w :Windows!<CR>
 
 " fernを開く
 nnoremap <Leader>e :<C-u>Fern . -drawer -stay -keep -toggle -reveal=%<CR>
-
-" }}}
-
-" gin.vim {{{
-
-" git status
-noremap <silent> gs :<C-u>split<CR>:GinStatus<CR>
-" git branch
-nnoremap <silent> gbc :<C-u>split<CR>:GinBranch --all<CR>
-" git blame
-nnoremap <silent> gb :<C-u>vsplit<CR>::GinBuffer blame %:t<CR>
-
-function! s:gin_status_settings() abort
-  nnoremap <buffer><silent> gc :Gin commit -v<CR>
-  nnoremap <buffer><silent> gd :GinDiff<CR>
-  nnoremap <buffer><silent> gps :Gin push<CR>
-  nnoremap <buffer><silent> q :q<CR>
-endfunction
-
-function! s:gin_q_settings() abort
-  nnoremap <buffer><silent> q :q<CR>
-endfunction
-
-augroup vimrc_gin_settings
-  autocmd!
-  autocmd FileType gin-status call s:gin_status_settings()
-  autocmd FileType gin-branch call s:gin_q_settings()
-  autocmd FileType gin call s:gin_q_settings()
-augroup END
 
 " }}}
 
