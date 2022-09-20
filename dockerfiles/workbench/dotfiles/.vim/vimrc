@@ -40,8 +40,8 @@ set wildmenu
 set wildignorecase
 
 " タブ、空白を可視化
-set list
-set listchars=tab:»-,extends:»,precedes:«
+" set list
+" set listchars=tab:»-,extends:»,precedes:«
 
 " タブを2文字分にする
 set tabstop=2
