@@ -67,6 +67,11 @@ set hlsearch
 set ignorecase
 " 文字列検索で大文字を含んでいたらignorecaseを上書きし、大文字・小文字を区別する
 set smartcase
+" インクリメンタルサーチ
+set incsearch
+" far.vimの推奨設定
+set lazyredraw
+set regexpengine=1
 
 " }}}
 
@@ -200,6 +205,9 @@ Plug 'rhysd/git-messenger.vim' " default key <leader>gm
 " コメントアウト
 Plug 'tomtom/tcomment_vim'
 
+" 検索と置換を便利にする
+Plug 'brooth/far.vim'
+
 " }}}
 
 " Require denops.vim {{{
@@ -323,6 +331,15 @@ let g:fern#renderer='nerdfont'
 
 " ポップアップにカーソルを常に表示
 let g:git_messenger_always_into_popup = 1
+
+" }}}
+
+" far.vim {{{
+
+" Rgを使う
+let g:far#source="rg"
+" タブで開く
+let g:far#window_layout="tab"
 
 " }}}
 
@@ -550,6 +567,17 @@ nnoremap <silent> K :LspHover<CR>
 " S-k フォルダ作成
 " S-n ファイル作成
 " カレントディレクトリを変更したい場合はactionのcdを実行する。GFilesCwd の検索ディレクトリがそのディレクトリになるので便利。
+
+" }}}
+
+" far.vim {{{
+
+" ファイルの検索パターンは :h far-vimgrep-file-mask を見る
+" 検索・置換画面でのキーマッピングは :h default-far-mappings を見る
+
+" 使い方１：.rbがつくファイル内の foo を bar に置換する
+" :Far foo bar **/*.rb
+" :Fardo
 
 " }}}
 
