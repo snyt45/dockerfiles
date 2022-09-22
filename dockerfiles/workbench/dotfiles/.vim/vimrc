@@ -197,6 +197,9 @@ Plug 'voldikss/vim-floaterm'
 " コミット履歴を調べる
 Plug 'rhysd/git-messenger.vim' " default key <leader>gm
 
+" コメントアウト
+Plug 'tomtom/tcomment_vim'
+
 " }}}
 
 " Require denops.vim {{{
