@@ -69,9 +69,6 @@ set ignorecase
 set smartcase
 " インクリメンタルサーチ
 set incsearch
-" far.vimの推奨設定
-set lazyredraw
-set regexpengine=1
 
 " }}}
 
@@ -155,6 +152,35 @@ nnoremap <silent> <Esc><Esc> :<C-u>nohlsearch<CR><Esc>
 
 " }}}
 
+" Quickfix {{{
+
+" 次の結果へ
+nnoremap gn :<C-u>cn<CR>
+" 次のファイルの結果へ
+nnoremap gN :<C-u>cnf<CR>
+" 前の結果へ
+nnoremap gp :<C-u>cp<CR>
+" 前のファイルの結果へ
+nnoremap gP :<C-u>cpf<CR>
+" Toggle quickfix
+if exists('g:__QUICKFIX_TOGGLE__')
+    finish
+endif
+let g:__QUICKFIX_TOGGLE__ = 1
+
+function! ToggleQuickfix()
+    let l:nr = winnr('$')
+    cwindow
+    let l:nr2 = winnr('$')
+    if l:nr == l:nr2
+        cclose
+    endif
+endfunction
+nnoremap <script> <silent> <Leader>qq :call ToggleQuickfix()<CR>
+
+" }}}
+
+
 " Other {{{
 
 " よくミスタイプするのでマクロ記録しないようにする
@@ -205,8 +231,8 @@ Plug 'rhysd/git-messenger.vim' " default key <leader>gm
 " コメントアウト
 Plug 'tomtom/tcomment_vim'
 
-" 検索と置換を便利にする
-Plug 'brooth/far.vim'
+" quickfixでの検索と置換を便利にする
+Plug 'wincent/ferret'
 
 " }}}
 
@@ -334,15 +360,6 @@ let g:git_messenger_always_into_popup = 1
 
 " }}}
 
-" far.vim {{{
-
-" Rgを使う
-let g:far#source="rg"
-" タブで開く
-let g:far#window_layout="tab"
-
-" }}}
-
 " vim-lsp {{{
 
 " 画面左端のサイン列にエラー、警告、情報、ヒントのアイコンを表示
@@ -441,7 +458,7 @@ command! -bang -nargs=? GFilesCwd
   \ call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(<q-args> == '?' ? { 'dir': getcwd(), 'placeholder': '' } : { 'dir': getcwd() }), <bang>0)
 
 " fzfでvimのコマンド履歴検索
-nnoremap <silent> <Leader>r :History:!<CR>
+" nnoremap <silent> <Leader>r :History:!<CR>
 " fzfでgit管理ファイル検索
 nnoremap <silent> <Leader>p :GFilesCwd!<CR>
 " fzfで変更ファイル検索
@@ -570,14 +587,18 @@ nnoremap <silent> K :LspHover<CR>
 
 " }}}
 
-" far.vim {{{
+" ferret {{{
 
-" ファイルの検索パターンは :h far-vimgrep-file-mask を見る
-" 検索・置換画面でのキーマッピングは :h default-far-mappings を見る
-
-" 使い方１：.rbがつくファイル内の foo を bar に置換する
-" :Far foo bar **/*.rb
-" :Fardo
+" :Ack pattern   現在の作業ディレクトリ配下を検索
+" :Ack pattern % 現在のファイルを検索
+" :Acks /置換前/置換後/ quickfix内の文字列を置換する
+" ferretで追加されるキーマッピング
+"   SPC - a :Ack を入力している状態になる
+"   SPC - s カーソル下の文字列を:Ackする
+"   SPC - r 置換する
+" quickfix内で使えるようになるキーマッピング
+"   dd quickfixの結果から行削除
+"   d  ビジュアルモードでquickfixの結果から行削除
 
 " }}}
 
