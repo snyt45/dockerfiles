@@ -26,33 +26,39 @@ WSL2セットアップ済みであること。
 
 セットアップ方法は[こちら](https://github.com/snyt45/windows11-dotfiles#6-wsl2%E3%81%AE%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97%E3%82%92%E8%A1%8C%E3%81%86)
 
-### 1. Git Setting
+### WSL側
+
+TODO: setup用のスクリプトを作る。
+
+#### 1. Git Setting
+gitconfigの設定を行う。
 
 ```
-git config --global user.name "global"
-git config --global user.email "global@example.com"
-
+git config --global user.name "メインアカウント"
+git config --global user.email "メインアカウントメールアドレス"
 git config --global core.editor vim
+```
 
+エイリアスメソッドの追加。
+```
 echo "alias g='git'" >> ~/.bashrc
 source ~/.bashrc
 ```
 
-### 2. Clone
+#### 2. Clone
 
 ```
 git clone https://github.com/snyt45/dockerfiles.git ~/.dockerfiles
 ```
 
-
-### 3. Requirement
+#### 3. Requirement
 
 ```
 sudo apt update && sudo apt upgrade
 sudo apt install make
 ```
 
-### 4. Options
+#### 4. Options
 
 ```
 sudo apt install zoxide
@@ -60,7 +66,7 @@ echo 'eval "$(zoxide init bash)"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-### 5. 共有用ディレクトリを作成する
+#### 5. 共有用ディレクトリを作成する
 
 ```
 mkdir -p ~/work/ && mkdir -p ~/.shared_cache/
@@ -71,7 +77,7 @@ mkdir -p ~/work/ && mkdir -p ~/.shared_cache/
 | ~/work/ | 作業データ共有用のディレクトリ |
 | ~/.shared_cache/ | 作業用コンテナで作業時のキャッシュを残すためのディレクトリ |
 
-### 6. Git認証用のSSHディレクトリを作成する
+#### 6. Git認証用のSSHディレクトリを作成する
 
 参考：https://mykii.blog/use-many-github-accounts-by-ssh/
 
@@ -92,12 +98,12 @@ vim ~/.ssh/config
 
 config
 ```
-Host github-{メインアカウント用の名前}
+Host github-{メインアカウント}
 	HostName github.com
 	User {メインアカウントのユーザー名}
 	IdentityFile ~/.ssh/{メインアカウントの秘密鍵}
 	IdentitiesOnly yes
-Host github-{サブアカウント用の名前}
+Host github-{サブアカウント}
 	HostName github.com
 	User {サブアカウントのユーザー名}
 	IdentityFile ~/.ssh/{サブアカウントの秘密鍵}
@@ -112,16 +118,15 @@ ssh -T git@github-{サブアカウント用の名前}
 # clone
 cd ~/work
 
-git clone git@github-{メインアカウント用の名前}:{ID}/{リポジトリ名}.git
-git clone git@github-{サブアカウント用の名前}:{ID}/{リポジトリ名}.git
+git clone git@github-{メインアカウント}:{ID}/{リポジトリ名}.git
+git clone git@github-{サブアカウント}:{ID}/{リポジトリ名}.git
 ```
-
 
 | Dir | 説明 |
 | --- | --- |
 | ~/.ssh/ | Git認証用のSSH鍵を置くディレクトリ |
 
-### 7. クリップボード対応
+#### 7. クリップボード対応
 作業コンテナ内のクリップボードをホスト側に共有するための対応です。
 ※Vimでヤンクした内容は自動でホスト側に共有するようにvimrcに設定済みです。
 
@@ -153,7 +158,7 @@ trap hndl_SIGHUP SIGHUP
 SETTING
 ```
 
-### 8. VSCode対応
+#### 8. VSCode対応
 作業コンテナ内で`code .`を実行すると、ホスト側で`code .`を実行するための対応です。
 ※ホスト側で`code .`を実行する仕組みのため、コンテナとホスト側でバインドマウントしているディレクトリのみ開けます。
 
@@ -178,6 +183,17 @@ if [[ $(command -v socat > /dev/null; echo $?) == 0 ]]; then
     fi
 fi
 SETTING
+```
+
+### 作業用コンテナ側
+
+#### 1. Git Setting
+
+プロジェクト毎に設定を行う。
+
+```
+git config --local user.name "サブアカウント"
+git config --local user.email "サブアカウントメールアドレス"
 ```
 
 ## 基本的なワークフロー
@@ -211,6 +227,26 @@ make target="workbench"
 - アプリケーションサーバ起動時、`0.0.0.0`でLISTENするよう変更する
   - (例)viteの場合、yarn dev --host
 
+### 既存のClone済みのリポジトリでSSH鍵を使う
+
+次のように url を書き換える。
+
+参考： https://msyksphinz.hatenablog.com/entry/2019/10/28/040000
+
+```
+git config -e
+
+// 書き換え前
+[remote "origin"]
+        url = https://github.com/snyt45/dockerfiles.git
+        fetch = +refs/heads/*:refs/remotes/origin/*
+
+// 書き換え後
+[remote "origin"]
+        url = git@github-snyt45:snyt45/dockerfiles.git
+        fetch = +refs/heads/*:refs/remotes/origin/*
+```
+
 ## makeコマンド
 
 | コマンド | 説明 |
@@ -223,3 +259,7 @@ make target="workbench"
 | make allrm | 全てのdocker containerを削除 |
 | make allrmi | 全てのdocker imageを削除 |
 | make help | ヘルプを表示 |
+
+## Inspire
+
+[作業環境をDockerfileにまとめて、macOSでもLinuxでもWSL2でも快適に過ごせるようになった話](https://zenn.dev/hinoshiba/articles/workstation-on-docker)
