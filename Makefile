@@ -31,6 +31,8 @@ runopt+= --mount type=bind,src=$(HOME)/.shared_cache,dst=$(HOME)/.shared_cache
 runopt+= --mount type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock
 # マウントオプション ssh
 runopt+= --mount type=bind,src=$(HOME)/.ssh,dst=$(HOME)/.ssh
+# マウントオプション gitconfig
+runopt+= --mount type=bind,src=$(HOME)/.gitconfig,dst=$(HOME)/.gitconfig
 # ポートフォワーディングオプション
 # 作業用コンテナ内で起動したサーバーにアクセスできるようにコンテナのポートを公開しておく ※必要に応じて追加する
 runopt+= -p 127.0.0.1:3030:3030
