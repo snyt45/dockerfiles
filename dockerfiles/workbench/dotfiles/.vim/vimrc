@@ -267,6 +267,8 @@ Plug 'mattn/vim-maketable'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'mattn/vim-lsp-settings' " 各language-serverを1コマンドで導入できる
 Plug 'tsuyoshicho/vim-efm-langserver-settings' " efm-langserverをゼロコンフィグで使える
+Plug 'prabirshrestha/asyncomplete.vim' " 非同期オートコンプリート
+Plug 'prabirshrestha/asyncomplete-lsp.vim' " asyncomplete.vimのsource
 
 " }}}
 
@@ -386,6 +388,13 @@ let g:lsp_diagnostics_highlights_insert_mode_enabled = 0
 let g:lsp_diagnostics_signs_delay = 50
 let g:lsp_diagnostics_signs_insert_mode_enabled = 0
 
+" golang
+function! s:on_lsp_buffer_enabled() abort
+  let g:lsp_format_sync_timeout = 1000
+  " バッファ保存時に毎回「import補完」と「コードフォーマット」を実行
+  autocmd BufWritePre *.go call execute(['LspCodeActionSync source.organizeImports', 'LspDocumentFormatSync'])
+endfunction
+
 " debug
 " ログを有効にする
 " let g:lsp_log_verbose = 1
@@ -436,6 +445,12 @@ let g:lsp_settings = {
 " let g:efm_langserver_settings#debug = 5
 " ログの出力先
 " let g:efm_langserver_settings#debug_file = expand('~/.shared_cache/.vim/efm-langserver.log')
+
+" }}}
+
+" asyncomplete.vim {{{
+
+let g:asyncomplete_popup_delay = 100
 
 " }}}
 
@@ -497,14 +512,22 @@ nnoremap <silent> <Leader>lt :FloatermNew --autoclose=2 --height=0.9 --width=0.9
 " 適用できるアクションのリストからアクションを実行
 nnoremap <silent> Q :<C-u>LspCodeAction<CR>
 xnoremap <silent> Q :<C-u>'<,'>LspCodeAction<CR>
+
 " 定義箇所に移動
-nnoremap <silent> ld :<C-u>LspDefinition<CR>
+nnoremap <silent> gd :<C-u>LspDefinition<CR>
+" 参照箇所を検索
+nnoremap <silent> gr :<C-u>LspReferences<CR>
+" 全実装とinterfaceを検索
+nnoremap <silent> gi :<C-u>LspImplementation<CR>
 " 型定義に移動
-nnoremap <silent> lt :<C-u>LspTypeDefinition<CR>
-" 全実装とインターフェースを見つける
-nnoremap <silent> li :<C-u>LspImplementation<CR>
+nnoremap <silent> gt :<C-u>LspTypeDefinition<CR>
+" カーソル下のシンボルの名前を変更
+nnoremap <silent> grn :LspRename<CR>
+" カーソル下のシンボルの情報をフロート表示
+nnoremap <silent> K :LspHover<CR>
+
 " ファイルの診断結果をquickfixに表示
-nnoremap <silent> ldd :<C-u>LspDocumentDiagnostics<CR>
+nnoremap <silent> gdd :<C-u>LspDocumentDiagnostics<CR>
 " エラー、警告、情報、ヒントを含む次の診断にジャンプ
 nnoremap <silent> ]g :LspNextDiagnostic<CR>
 " エラー、警告、情報、ヒントを含む前の診断にジャンプ
@@ -513,10 +536,14 @@ nnoremap <silent> [g :LspPreviousDiagnostic<CR>
 nnoremap <silent> ]e :LspNextError<CR>
 " 前のエラーにジャンプ
 nnoremap <silent> [e :LspPreviousError<CR>
-" カーソル下のシンボルの名前を変更
-nnoremap <silent> lrr :LspRename<CR>
-" カーソル下のシンボルの情報をフロート表示
-nnoremap <silent> K :LspHover<CR>
+
+" }}}
+
+" asyncomplete.vim {{{
+
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
 
 " }}}
 
