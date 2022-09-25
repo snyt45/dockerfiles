@@ -1,5 +1,6 @@
 ## const
 INIT_SHELL=/bin/bash
+WORKBENCH=workbench
 
 ## args
 # makeコマンドの引数
@@ -10,32 +11,36 @@ TGT=$(target)
 export USER
 export HOME
 
-## docker build時のオプション
-# ローカルのuidを渡す
-buildopt= --build-arg local_uid=$(shell id -u ${USER})
-# ローカルのgidを渡す
-buildopt+= --build-arg local_gid=$(shell id -g ${USER})
-# ローカルのhomeを渡す
-buildopt+= --build-arg local_home=$(HOME)
-# ローカルのwhoamiを渡す
-buildopt+= --build-arg local_whoami=$(shell whoami)
+ifeq ($(TGT), $(WORKBENCH))
+	## docker build時のオプション
+	# ローカルのuidを渡す
+	buildopt= --build-arg local_uid=$(shell id -u ${USER})
+	# ローカルのgidを渡す
+	buildopt+= --build-arg local_gid=$(shell id -g ${USER})
+	# ローカルのhomeを渡す
+	buildopt+= --build-arg local_home=$(HOME)
+	# ローカルのwhoamiを渡す
+	buildopt+= --build-arg local_whoami=$(shell whoami)
 
-## docker run時のオプション
-# 環境変数 LOCAL_GID LOCAL_HOME LOCAL_WHOAMI LOCAL_DOCKER_GID
-runopt= -e LOCAL_GID=$(shell id -u ${USER}) -e LOCAL_HOME=$(HOME) -e LOCAL_WHOAMI=$(shell whoami) -e LOCAL_DOCKER_GID=$(shell getent group docker | awk -F: '{print $$3}')
-# マウントオプション work
-runopt+= --mount type=bind,src=$(HOME)/work,dst=$(HOME)/work
-# マウントオプション shared_cache
-runopt+= --mount type=bind,src=$(HOME)/.shared_cache,dst=$(HOME)/.shared_cache
-# マウントオプション docker socket
-runopt+= --mount type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock
-# マウントオプション ssh
-runopt+= --mount type=bind,src=$(HOME)/.ssh,dst=$(HOME)/.ssh
-# マウントオプション gitconfig
-runopt+= --mount type=bind,src=$(HOME)/.gitconfig,dst=$(HOME)/.gitconfig
-# ポートフォワーディングオプション
-# 作業用コンテナ内で起動したサーバーにアクセスできるようにコンテナのポートを公開しておく ※必要に応じて追加する
-runopt+= -p 127.0.0.1:3030:3030
+	## docker run時のオプション
+	# 環境変数 LOCAL_GID LOCAL_HOME LOCAL_WHOAMI LOCAL_DOCKER_GID
+	runopt= -e LOCAL_GID=$(shell id -u ${USER}) -e LOCAL_HOME=$(HOME) -e LOCAL_WHOAMI=$(shell whoami) -e LOCAL_DOCKER_GID=$(shell getent group docker | awk -F: '{print $$3}')
+	# マウントオプション work
+	runopt+= --mount type=bind,src=$(HOME)/work,dst=$(HOME)/work
+	# マウントオプション shared_cache
+	runopt+= --mount type=bind,src=$(HOME)/.shared_cache,dst=$(HOME)/.shared_cache
+	# マウントオプション docker socket
+	runopt+= --mount type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock
+	# マウントオプション ssh
+	runopt+= --mount type=bind,src=$(HOME)/.ssh,dst=$(HOME)/.ssh
+	# マウントオプション gitconfig
+	runopt+= --mount type=bind,src=$(HOME)/.gitconfig,dst=$(HOME)/.gitconfig
+	# ポートフォワーディングオプション
+	# 作業用コンテナ内で起動したサーバーにアクセスできるようにコンテナのポートを公開しておく ※必要に応じて追加する
+	runopt+= -p 127.0.0.1:3030:3030
+else
+	runopt=-u `id -u`:`id -g`
+endif
 
 .PHONY: all
 all: repopull start attach ## [Default] repopull -> start -> attach の順に実行
