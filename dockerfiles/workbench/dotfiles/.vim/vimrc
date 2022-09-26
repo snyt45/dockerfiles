@@ -388,12 +388,23 @@ let g:lsp_diagnostics_highlights_insert_mode_enabled = 0
 let g:lsp_diagnostics_signs_delay = 50
 let g:lsp_diagnostics_signs_insert_mode_enabled = 0
 
-" golang
+" vim-lsp がバッファで有効になったときに実行される関数
+" バッファローカルなキーバインドやオプションを指定
+" See: https://mattn.kaoriya.net/software/vim/20191231213507.htm
 function! s:on_lsp_buffer_enabled() abort
   let g:lsp_format_sync_timeout = 1000
+
+  " golang {{{
+
   " バッファ保存時に毎回「import補完」と「コードフォーマット」を実行
   autocmd BufWritePre *.go call execute(['LspCodeActionSync source.organizeImports', 'LspDocumentFormatSync'])
+
+  " }}}
 endfunction
+augroup lsp_install
+  au!
+  autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END
 
 " debug
 " ログを有効にする
