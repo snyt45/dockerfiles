@@ -35,7 +35,7 @@ endif
 set virtualedit=block
 
 " コマンドラインでTAB補完時に候補メニューを表示
-set wildmenu
+set wildmenu wildoptions=pum
 " コマンドラインでTAB補完時に大文字・小文字を区別しない
 set wildignorecase
 
@@ -629,6 +629,7 @@ inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
 
 " :Ack pattern   現在の作業ディレクトリ配下を検索
 " :Ack pattern % 現在のファイルを検索
+" :Back pattern  バッファ一覧を検索
 " :Acks /置換前/置換後/ quickfix内の文字列を置換する
 " ferretで追加されるキーマッピング
 "   SPC - a :Ack を入力している状態になる

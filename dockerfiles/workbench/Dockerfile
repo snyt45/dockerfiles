@@ -15,6 +15,8 @@ ARG password=password
 RUN sed -i 's@archive.ubuntu.com@ftp.jaist.ac.jp/pub/Linux@g' /etc/apt/sources.list
 # rootユーザーで実施。この後作成するユーザーだとライブラリによってインストールが進行しないことがあったため。
 RUN apt update && apt upgrade -y && \
+    apt install -y software-properties-common && \
+    add-apt-repository -y ppa:jonathonf/vim && \
     DEBIAN_FRONTEND=noninteractive apt install -y \
       tzdata \
       language-pack-ja \
