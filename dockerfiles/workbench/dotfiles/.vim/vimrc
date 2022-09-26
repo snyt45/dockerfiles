@@ -484,7 +484,7 @@ command! -bang -nargs=? GFilesCwd
   \ call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(<q-args> == '?' ? { 'dir': getcwd(), 'placeholder': '' } : { 'dir': getcwd() }), <bang>0)
 
 " fzfでvimのコマンド履歴検索
-" nnoremap <silent> <Leader>r :History:!<CR>
+nnoremap <silent> <Leader>r :History:!<CR>
 " fzfでgit管理ファイル検索
 nnoremap <silent> <Leader>p :GFilesCwd!<CR>
 " fzfで変更ファイル検索
@@ -634,7 +634,7 @@ inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
 " ferretで追加されるキーマッピング
 "   SPC - a :Ack を入力している状態になる
 "   SPC - s カーソル下の文字列を:Ackする
-"   SPC - r 置換する
+"   SPC - r 置換する ※使わないので現在はfzf.vimのコマンドで上書き
 " quickfix内で使えるようになるキーマッピング
 "   dd quickfixの結果から行削除
 "   d  ビジュアルモードでquickfixの結果から行削除
