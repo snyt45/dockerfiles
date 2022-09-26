@@ -648,3 +648,11 @@ inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
 " ref: https://github.com/tsuyoshicho/vim-efm-langserver-settings#support-command
 
 " }}}
+
+" vim-floaterm {{{
+
+" ターミナルモード時に使うコマンド
+"   C-w : コマンドラインモードに切り替え(例：C-s : の後に FloatermKill!)
+"   C-w N ターミナルモードに切り替え
+
+" }}}
