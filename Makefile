@@ -5,6 +5,7 @@ WORKBENCH=workbench
 ## args
 # makeコマンドの引数
 TGT=$(target)
+PORT=${port}
 
 ## env
 # ローカルの環境変数をimport
@@ -35,11 +36,11 @@ ifeq ($(TGT), $(WORKBENCH))
 	runopt+= --mount type=bind,src=$(HOME)/.ssh,dst=$(HOME)/.ssh
 	# マウントオプション gitconfig
 	runopt+= --mount type=bind,src=$(HOME)/.gitconfig,dst=$(HOME)/.gitconfig
-	# ポートフォワーディングオプション
-	# 作業用コンテナ内で起動したサーバーにアクセスできるようにコンテナのポートを公開しておく ※必要に応じて追加する
-	runopt+= -p 127.0.0.1:3030:3030
 else
 	runopt=-u `id -u`:`id -g`
+endif
+ifneq ($(PORT), )
+	portopt= -p 127.0.0.1:$(PORT):$(PORT)
 endif
 
 .PHONY: all
@@ -74,7 +75,7 @@ ifeq ($(shell docker images -aq "$(USER)/$(TGT)"), )
 endif
 # targetと同じコンテナ名が存在しない場合
 ifeq ($(shell docker ps -aq -f name="$(TGT)"), )
-	docker container run -itd --rm --name $(TGT) $(runopt) $(USER)/$(TGT)
+	docker container run -itd --rm --name $(TGT) $(runopt) $(portopt) $(USER)/$(TGT)
 	sleep 1
 endif
 
