@@ -124,6 +124,8 @@ RUN mkdir -p /home/${local_whoami}/.vim/ && \
     ln -s /etc/dotfiles/.vim/vimrc /home/${local_whoami}/.vim/ && \
     mkdir -p /home/${local_whoami}/.vim/autoload/ && \
     curl -fLo /home/${local_whoami}/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+RUN mkdir -p /home/${local_whoami}/.vim/config && \
+    for file in /etc/dotfiles/.vim/config/*; do ln -s ${file} /home/${local_whoami}/.vim/config; done
 # bash
 RUN ln -sf /etc/dotfiles/.bashrc /home/${local_whoami}/ && \
     ln -sf /etc/dotfiles/.bash_profile /home/${local_whoami}/ && \

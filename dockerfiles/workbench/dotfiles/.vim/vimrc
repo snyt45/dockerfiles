@@ -2,191 +2,43 @@
 " VIM SETTINGS
 " ----------------------------------------------------------------------------
 
-" Display {{{
+set number                   " 画面左端に行番号を表示
+set signcolumn=yes           " 画面左端にサイン列を常に表示
+set laststatus=2             " 画面最下部に常にステータスラインを表示
+set cmdheight=2              " 画面最下部(ステータス行より下)のメッセージ表示欄を2行にする
+set showtabline=2            " タブ毎に常にタブラインを表示
 
-" 画面左端に行番号を表示
-set number
-" 画面左端にサイン列を常に表示
-set signcolumn=yes
-" 画面最下部に常にステータスラインを表示
-set laststatus=2
-" 画面最下部(ステータス行より下)のメッセージ表示欄を2行にする
-set cmdheight=2
+set virtualedit=block        " 矩形選択時に仮想編集を有効化
+set wildmenu wildoptions=pum " コマンドラインでTAB補完時に候補メニューを表示
+set wildignorecase           " コマンドラインでTAB補完時に大文字・小文字を区別しない
 
-" タブ毎に常にタブラインを表示
-set showtabline=2
+set tabstop=2                " タブを2文字分にする
+set expandtab                " タブの代わりに半角スペースを使用
+set shiftwidth=2             " インデントを半角スペース2文字にする
+set smartindent              " 新しい行追加時に自動でインデントを追加
+set foldmethod=indent        " 同じインデントレベルのコードを折り畳む
+set foldlevel=100            " 初期表示時に勝手に折り畳まれないように折り畳みレベルを深めに設定
+
+set hlsearch                 " 文字列検索のハイライト
+set ignorecase               " 文字列検索で大文字・小文字を区別しない
+set smartcase                " 文字列検索で大文字を含んでいたらignorecaseを上書きし、大文字・小文字を区別する
+set incsearch                " インクリメンタルサーチ
+
+set noswapfile               " スワップファイル(.swp)を生成しない
+set nobackup                 " バックアップファイル(~)を生成しない
+set noundofile               " undoファイル(.un~)を生成しない
+set encoding=utf-8           " Vim内部で使われる文字エンコーディングにutf-8にする
+set updatetime=100           " 更新時間を100msに設定
+set mouse=a                  " マウス操作を有効にする
+set helplang=ja,en
 
 " Vimのカーソル表示
 " ref: https://qiita.com/Linda_pp/items/9e0c94eb82b18071db34
 if has('vim_starting')
-    " 挿入モード時に非点滅の縦棒タイプのカーソル
-    let &t_SI .= "\e[6 q"
-    " ノーマルモード時に非点滅のブロックタイプのカーソル
-    let &t_EI .= "\e[2 q"
-    " 置換モード時に非点滅の下線タイプのカーソル
-    let &t_SR .= "\e[4 q"
+    let &t_SI .= "\e[6 q" " 挿入モード時に非点滅の縦棒タイプのカーソル
+    let &t_EI .= "\e[2 q" " ノーマルモード時に非点滅のブロックタイプのカーソル
+    let &t_SR .= "\e[4 q" " 置換モード時に非点滅の下線タイプのカーソル
 endif
-
-" }}}
-
-" Edit {{{
-
-" 矩形選択時に仮想編集を有効化
-set virtualedit=block
-
-" コマンドラインでTAB補完時に候補メニューを表示
-set wildmenu wildoptions=pum
-" コマンドラインでTAB補完時に大文字・小文字を区別しない
-set wildignorecase
-
-" タブ、空白を可視化
-" set list
-" set listchars=tab:»-,extends:»,precedes:«
-
-" タブを2文字分にする
-set tabstop=2
-" タブの代わりに半角スペースを使用
-set expandtab
-" インデントを半角スペース2文字にする
-set shiftwidth=2
-" 新しい行追加時に自動でインデントを追加
-set smartindent
-
-" 同じインデントレベルのコードを折り畳む
-set foldmethod=indent
-" 初期表示時に勝手に折り畳まれないように折り畳みレベルを深めに設定
-set foldlevel=100
-
-" }}}
-
-" Serach {{{
-
-" 文字列検索のハイライト
-set hlsearch
-" 文字列検索で大文字・小文字を区別しない
-set ignorecase
-" 文字列検索で大文字を含んでいたらignorecaseを上書きし、大文字・小文字を区別する
-set smartcase
-" インクリメンタルサーチ
-set incsearch
-
-" }}}
-
-" File {{{
-
-" スワップファイル(.swp)を生成しない
-" クラッシュ時に変更内容を復帰する際に便利だがスワップファイルがあるときに毎回出る表示がうっとうしいので使わない
-set noswapfile
-" バックアップファイル(~)を生成しない
-set nobackup
-" undoファイル(.un~)を生成しない
-set noundofile
-
-" }}}
-
-" Other {{{
-
-" Vim内部で使われる文字エンコーディングにutf-8にする
-set encoding=utf-8
-
-" 更新時間を100msに設定
-" 更新時間に依存するプラグインのための設定 vim-nitgutter etc..
-set updatetime=100
-
-" マウス操作を有効にする
-set mouse=a
-
-" }}}
-
-" ----------------------------------------------------------------------------
-" VIM KEY MAPPINGS
-" ----------------------------------------------------------------------------
-
-" <Leader>にスペース割り当て
-let mapleader = "\<Space>"
-
-" Move {{{
-
-" 段落移動
-nnoremap <C-j> 5j
-nnoremap <C-k> 5k
-
-" }}}
-
-" Edit {{{
-
-" ヤンクレジスタを使って貼り付け
-noremap PP "0p
-
-" カレントバッファのファイルパスをクリップボードにコピー
-nnoremap <Leader><C-g> :<C-u>echo "copied fullpath: " . expand('%:p') \| let @"=expand('%:p') \| call system('clip.sh -i', @")<CR>
-" ヤンクした内容をクリップボードにコピー
-augroup Yank
-  au!
-  autocmd TextYankPost * :call system('clip.sh -i', @")
-augroup END
-
-" }}}
-
-" Tab {{{
-
-" 新規タブ
-nmap te :<C-u>tabedit<CR>
-" 現在のバッファを新規タブで開く
-nmap tt :<C-u>tab split<CR>
-" 前のタブに移動
-nmap <S-Tab> :<C-u>tabprev<CR>
-" 次のタブに移動
-nmap <Tab> :<C-u>tabnext<CR>
-" タブを右に移動
-nmap tn <C-w>:+tabmove<CR>
-" タブを左に移動
-nmap tp <C-w>:-tabmove<CR>
-
-" }}}
-
-" Serach {{{
-
-" 文字列検索のハイライトオフ
-nnoremap <silent> <Esc><Esc> :<C-u>nohlsearch<CR><Esc>
-
-" }}}
-
-" Quickfix {{{
-
-" 次の結果へ
-nnoremap gn :<C-u>cn<CR>
-" 次のファイルの結果へ
-nnoremap gN :<C-u>cnf<CR>
-" 前の結果へ
-nnoremap gp :<C-u>cp<CR>
-" 前のファイルの結果へ
-nnoremap gP :<C-u>cpf<CR>
-" Toggle quickfix
-if exists('g:__QUICKFIX_TOGGLE__')
-    finish
-endif
-let g:__QUICKFIX_TOGGLE__ = 1
-
-function! ToggleQuickfix()
-    let l:nr = winnr('$')
-    cwindow
-    let l:nr2 = winnr('$')
-    if l:nr == l:nr2
-        cclose
-    endif
-endfunction
-nnoremap <script> <silent> <Leader>qq :call ToggleQuickfix()<CR>
-
-" }}}
-
-
-" Other {{{
-
-" よくミスタイプするのでマクロ記録しないようにする
-noremap q <silent>
-
-" }}}
 
 " ----------------------------------------------------------------------------
 " PLUGINS
@@ -194,83 +46,33 @@ noremap q <silent>
 
 call plug#begin('~/.shared_cache/.vim/plugged')
 
-" Basic {{{
-
-" カラースキーマ
-Plug 'morhetz/gruvbox'
-
-" Vimのヘルプを日本語化
-Plug 'vim-jp/vimdoc-ja'
-
-" ステータスライン・タブライン
-Plug 'itchyny/lightline.vim'
-Plug 'shinchu/lightline-gruvbox.vim'
-
-" 画面左端のサイン列にgit diffマーカーを表示
-Plug 'airblade/vim-gitgutter'
-
-" jkでの移動を高速にする
-Plug 'rhysd/accelerated-jk'
-
-" Vimでfzfを使えるようにする
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-
-" ファイルエクスプローラー
-Plug 'lambdalisue/nerdfont.vim' " Windows側にnerdfontをインストールしている必要あり
-Plug 'lambdalisue/fern.vim'
-Plug 'lambdalisue/fern-renderer-nerdfont.vim' " ファイル横にアイコン表示
-Plug 'lambdalisue/fern-git-status.vim' " ファイル横にGitの状態表示
-
-" フロートウィンドウでターミナルを開く
-Plug 'voldikss/vim-floaterm'
-
-" コミット履歴を調べる
-Plug 'rhysd/git-messenger.vim' " default key <leader>gm
-
-" コメントアウト
-Plug 'tomtom/tcomment_vim'
-
-" quickfixでの検索と置換を便利にする
-Plug 'wincent/ferret'
-
-" }}}
-
-" Require denops.vim {{{
-
+Plug 'morhetz/gruvbox'                              " カラースキーマ
+Plug 'vim-jp/vimdoc-ja'                             " Vimのヘルプを日本語化
+Plug 'liuchengxu/vim-which-key'
+Plug 'itchyny/lightline.vim'                        " ステータスライン・タブライン
+  Plug 'shinchu/lightline-gruvbox.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'                       " 画面左端のサイン列にgit diffマーカーを表示
+Plug 'rhysd/accelerated-jk'                         " jkでの移動を高速にする
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " Vimでfzfを使えるようにする
+  Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/rpc' }
+Plug 'lambdalisue/nerdfont.vim'                     " Windows側にnerdfontをインストールしている必要あり
+Plug 'lambdalisue/fern.vim'                         " ファイルエクスプローラー
+  Plug 'lambdalisue/fern-renderer-nerdfont.vim'     " ファイル横にアイコン表示
+  Plug 'lambdalisue/fern-git-status.vim'            " ファイル横にGitの状態表示
+Plug 'tomtom/tcomment_vim'                          " コメントアウト
+Plug 'junegunn/vim-easy-align'                      " いい感じにインデントを揃える
 Plug 'vim-denops/denops.vim'
-
-" 選択範囲を翻訳
-Plug 'skanehira/denops-translate.vim'
-
-" }}}
-
-" Coding Support {{{
-
-" 対応するテキストのペアの識別を強化
-Plug 'andymass/vim-matchup'
-
-" Rails開発を便利にする
-Plug 'tpope/vim-rails'
-
-" }}}
-
-" Markdown {{{
-
-" カンマ区切りのテキストテーブル表記に変換
-Plug 'mattn/vim-maketable'
-
-" }}}
-
-" LSP {{{
-
+  Plug 'skanehira/denops-translate.vim'             " 選択範囲を翻訳
+Plug 'andymass/vim-matchup'                         " 対応するテキストのペアの識別を強化
+Plug 'tpope/vim-rails'                              " Rails開発を便利にする
+Plug 'mattn/vim-maketable'                          " カンマ区切りのテキストテーブル表記に変換
 Plug 'prabirshrestha/vim-lsp'
-Plug 'mattn/vim-lsp-settings' " 各language-serverを1コマンドで導入できる
-Plug 'tsuyoshicho/vim-efm-langserver-settings' " efm-langserverをゼロコンフィグで使える
-Plug 'prabirshrestha/asyncomplete.vim' " 非同期オートコンプリート
-Plug 'prabirshrestha/asyncomplete-lsp.vim' " asyncomplete.vimのsource
-
-" }}}
+Plug 'mattn/vim-lsp-settings'                       " 各language-serverを1コマンドで導入できる
+Plug 'tsuyoshicho/vim-efm-langserver-settings'      " efm-langserverをゼロコンフィグで使える
+Plug 'prabirshrestha/asyncomplete.vim'              " 非同期オートコンプリート
+Plug 'prabirshrestha/asyncomplete-lsp.vim'          " asyncomplete.vimのsource
+Plug 'voldikss/vim-floaterm'                        " フロートウィンドウでターミナルを開く
 
 call plug#end()
 
@@ -284,376 +86,17 @@ augroup vimrc_vim_plug_install
 augroup END
 
 " ----------------------------------------------------------------------------
-" PLUGIN SETTINGS
-" ----------------------------------------------------------------------------
-" colorscheme {{{
-
-" colorschemeがdarkグループの配色を使うように指定
-set background=dark
-colorscheme gruvbox
-
-" }}}
-
-" vimdoc-ja {{{
-
-set helplang=ja,en
-
-" }}}
-
-" lightline.vim {{{
-
-if !has('gui_running')
-  set t_Co=256
-endif
-
-let g:lightline = {}
-let g:lightline.colorscheme = 'gruvbox'
-
-" }}}
-
-" vim-gitgutter {{{
-
-let g:gitgutter_sign_added = '+'
-let g:gitgutter_sign_modified = '>'
-let g:gitgutter_sign_removed = '-'
-let g:gitgutter_sign_removed_first_line = '^'
-let g:gitgutter_sign_modified_removed = '<'
-
-" ref: https://teratail.com/questions/29844#reply-46767
-augroup vimrc_vim_gitgutter
-  autocmd!
-  " colorscheme読み込み後、サイン列の背景色をNONEにする ※Windows Terminal側の色を使いたいため
-  autocmd VimEnter,ColorScheme * highlight SignColumn guibg=NONE ctermbg=NONE
-
-  " colorscheme読み込み後、サイン列の記号の色を設定
-  autocmd VimEnter,ColorScheme * highlight GitGutterAdd guibg=NONE ctermbg=NONE guifg=#000900 ctermfg=2
-  autocmd VimEnter,ColorScheme * highlight GitGutterChange guibg=NONE ctermbg=NONE guifg=#bbbb00 ctermfg=3
-  autocmd VimEnter,ColorScheme * highlight GitGutterDelete guibg=NONE ctermbg=NONE guifg=#ff2222 ctermfg=1
-augroup END
-
-" }}}
-
-" fzf.vim {{{
-
-" fzfのプレビューウィンドウを下部に表示
-" Ctrl + / でプレビューウィンドウの表示/非表示切替
-let g:fzf_preview_window = ['down:60%', 'ctrl-/']
-
-" }}}
-
-" fern.vim {{{
-
-" 隠しファイルを表示する
-let g:fern#default_hidden=1
-let g:fern#renderer='nerdfont'
-
-" Vim起動時にfernを開く
-" augroup vimrc_fern
-"   autocmd!
-"   autocmd VimEnter * ++nested Fern . -drawer -stay -keep -toggle -reveal=%
-" augroup END
-
-" }}}
-
-" git-messenger.vim {{{
-
-" ポップアップにカーソルを常に表示
-let g:git_messenger_always_into_popup = 1
-
-" }}}
-
-" vim-lsp {{{
-
-" 画面左端のサイン列にエラー、警告、情報、ヒントのアイコンを表示
-let g:lsp_diagnostics_signs_enabled = 1
-let g:lsp_diagnostics_signs_error = {'text': '👾'}
-let g:lsp_diagnostics_signs_warning = {'text': '💣️'}
-let g:lsp_diagnostics_signs_hint = {'text': '💡'}
-let g:lsp_diagnostics_signs_information = {'text': 'ℹ️'}
-
-" Diagnosticsを有効にする
-let g:lsp_diagnostics_enabled = 1
-" カーソル下のエラー、警告、情報、ヒントを画面下部のコマンドラインに表示
-let g:lsp_diagnostics_echo_cursor = 1
-" カーソル下のエラー、警告、情報、ヒントをフロート表示
-let g:lsp_diagnostics_float_cursor = 1
-
-" 画面左端のサイン列にコードアクションのアイコン非表示
-let g:lsp_document_code_action_signs_enabled = 0
-" let g:lsp_document_code_action_signs_hint = {'text': '🅰️'}
-
-let g:lsp_diagnostics_echo_delay = 50
-let g:lsp_diagnostics_highlights_delay = 50
-let g:lsp_diagnostics_highlights_insert_mode_enabled = 0
-let g:lsp_diagnostics_signs_delay = 50
-let g:lsp_diagnostics_signs_insert_mode_enabled = 0
-
-" vim-lsp がバッファで有効になったときに実行される関数
-" バッファローカルなキーバインドやオプションを指定
-" See: https://mattn.kaoriya.net/software/vim/20191231213507.htm
-function! s:on_lsp_buffer_enabled() abort
-  let g:lsp_format_sync_timeout = 1000
-
-  " golang {{{
-
-  " バッファ保存時に毎回「import補完」と「コードフォーマット」を実行
-  autocmd BufWritePre *.go call execute(['LspCodeActionSync source.organizeImports', 'LspDocumentFormatSync'])
-
-  " }}}
-endfunction
-augroup lsp_install
-  au!
-  autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
-augroup END
-
-" debug
-" ログを有効にする
-" let g:lsp_log_verbose = 1
-" ログの出力先
-" let g:lsp_log_file = expand('~/.shared_cache/.vim/vim-lsp.log')
-
-" }}}
-
-" efm-langserver {{{
-
-let g:lsp_settings_servers_dir='~/.shared_cache/.vim/servers'
-
-" efm-langserverが未インストールの場合インストールする
-function! s:check_install_efm_langserver()
-  if !filereadable(expand(g:lsp_settings_servers_dir . '/efm-langserver/efm-langserver'))
-    LspInstallServer efm-langserver
-  endif
-endfunction
-
-augroup vimrc_check_install_efm_langserver
-    autocmd!
-    autocmd User lsp_setup call s:check_install_efm_langserver()
-augroup END
-
-" https://github.com/nakatanakatana/dotfiles
-" for efm-langserver-settings
-let s:efm_args = []
-if efm_langserver_settings#config_enable()
-  let s:efm_args = extend(s:efm_args, ['-c', efm_langserver_settings#config_path()])
-endif
-
-if efm_langserver_settings#debug_enable()
-  let s:efm_args = extend(s:efm_args, ['-logfile', efm_langserver_settings#debug_path()])
-  let s:efm_args = extend(s:efm_args, ['-loglevel', efm_langserver_settings#debug_enable()])
-endif
-
-let g:lsp_settings = {
-  \ 'efm-langserver': {
-    \ 'disabled': v:false,
-    \ 'args': s:efm_args,
-    \ 'allowlist': efm_langserver_settings#whitelist(),
-    \ 'blocklist': efm_langserver_settings#blacklist(),
-    \ }
-  \ }
-
-" debug
-" ログを有効にする
-" let g:efm_langserver_settings#debug = 5
-" ログの出力先
-" let g:efm_langserver_settings#debug_file = expand('~/.shared_cache/.vim/efm-langserver.log')
-
-" }}}
-
-" asyncomplete.vim {{{
-
-let g:asyncomplete_popup_delay = 100
-
-" }}}
-
-" ----------------------------------------------------------------------------
-" PLUGIN KEY MAPPINGS
+" VIM SETTINGS & PLUGIN SETTINGS
 " ----------------------------------------------------------------------------
 
-" accelerated-jk {{{
+" .vim/config/*.vim を順次読み込む
+"   prefix:
+"     000 - Vim設定
+"     100 - Vim設定に影響するプラグイン設定
+"     200 - ファイルタイプ関連
+"     300 - プラグイン固有設定
 
-" jkでの移動をタイプ数に応じて加速する
-nmap j <Plug>(accelerated_jk_gj)
-nmap k <Plug>(accelerated_jk_gk)
-
-" }}}
-
-" fzf.vim {{{
-
-" fzfでカレントディレクトリ配下のgit管理ファイル検索
-command! -bang -nargs=? GFilesCwd
-  \ call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(<q-args> == '?' ? { 'dir': getcwd(), 'placeholder': '' } : { 'dir': getcwd() }), <bang>0)
-
-" fzfでvimのコマンド履歴検索
-nnoremap <silent> <Leader>r :History:!<CR>
-" fzfでgit管理ファイル検索
-nnoremap <silent> <Leader>p :GFilesCwd!<CR>
-" fzfで変更ファイル検索
-nnoremap <silent> <Leader>g :GFiles!?<CR>
-" fzfで全文検索
-nnoremap <silent> <Leader>f :Rg!<CR>
-" fzfでバッファ検索
-nnoremap <silent> <Leader>b :Buffers!<CR>
-" fzfでカレントファイルの行検索
-nnoremap <silent> <Leader>l :BLines!<CR>
-" fzfでファイル履歴検索
-nnoremap <silent> <Leader>h :History!<CR>
-" fzfでウィンドウ検索
-nnoremap <silent> <Leader>w :Windows!<CR>
-
-" }}}
-
-" fern.vim {{{
-
-" fernを開く
-nnoremap <Leader>e :<C-u>Fern . -drawer -stay -keep -toggle -reveal=%<CR>
-
-" }}}
-
-" vim-floaterm {{{
-
-" lazygitを開く
-nnoremap <silent> <Leader>lz :FloatermNew --autoclose=2 --height=0.9 --width=0.9 lazygit<CR>
-" ターミナルを開く
-nnoremap <silent> <Leader>lt :FloatermNew --autoclose=2 --height=0.9 --width=0.9<CR>
-
-" "}}}
-
-" vim-lsp {{{
-
-" 適用できるアクションのリストからアクションを実行
-nnoremap <silent> Q :<C-u>LspCodeAction<CR>
-xnoremap <silent> Q :<C-u>'<,'>LspCodeAction<CR>
-
-" 定義箇所に移動
-nnoremap <silent> gd :<C-u>LspDefinition<CR>
-" 参照箇所を検索
-nnoremap <silent> gr :<C-u>LspReferences<CR>
-" 全実装とinterfaceを検索
-nnoremap <silent> gi :<C-u>LspImplementation<CR>
-" 型定義に移動
-nnoremap <silent> gt :<C-u>LspTypeDefinition<CR>
-" カーソル下のシンボルの名前を変更
-nnoremap <silent> grn :LspRename<CR>
-" カーソル下のシンボルの情報をフロート表示
-nnoremap <silent> K :LspHover<CR>
-
-" ファイルの診断結果をquickfixに表示
-nnoremap <silent> gdd :<C-u>LspDocumentDiagnostics<CR>
-" エラー、警告、情報、ヒントを含む次の診断にジャンプ
-nnoremap <silent> ]g :LspNextDiagnostic<CR>
-" エラー、警告、情報、ヒントを含む前の診断にジャンプ
-nnoremap <silent> [g :LspPreviousDiagnostic<CR>
-" 次のエラーにジャンプ
-nnoremap <silent> ]e :LspNextError<CR>
-" 前のエラーにジャンプ
-nnoremap <silent> [e :LspPreviousError<CR>
-
-" }}}
-
-" asyncomplete.vim {{{
-
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
-
-" }}}
-
-" ----------------------------------------------------------------------------
-" DOC
-" ----------------------------------------------------------------------------
-
-" Fold {{{
-
-" zc 同じインデントレベルを折り畳む
-" zo 折り畳みを展開
-" zR ファイル全体の折り畳みを展開
-
-" }}}
-
-" vim-gitgutter {{{
-
-" :h gitgutter-mappings
-
-" ]c 次のハンクにジャンプ
-" [c 前のハンクにジャンプ
-" <Leader>hs ハンクをステージ
-" <Leader>hu ハンクをアンステージ
-" <Leader>hp ハンクをプレビュー
-
-" }}}
-
-" denops-translate.vim {{{
-
-" :Translate 選択行を翻訳
-
-" }}}
-
-" vim-maketable {{{
-
-" カンマ区切りのテキストテーブル表記に変換
-
-" :MakeTable 選択行をテーブル表記に変換
-" :MakeTable! 選択行の1行目をヘッダーにしてテーブル表記に変換
-" :UnmakeTable テーブル表記を解除
-
-" }}}
-
-" vim-rails {{{
-
-" :A 対応するSpecファイルを開く
-" gf カーソル下の文字列に対応するファイルを開く
-
-" "}}}
-
-" fern.vim {{{
-
-" ? fernのヘルプを開く
-" C-h 親のフォルダに戻る
-" - ファイル選択
-" C-j C-k ファイル選択
-" ビジュアル選択して-で一括ファイル選択
-" s ファイルを開くウィンドウを選択
-" S-e 選択したファイルを分割表示
-" S-d 選択したファイルをゴミ箱へ ※trash-cliが必要
-" S-r 選択したファイルをリネーム
-" S-c 選択したファイルをコピー
-" S-p 選択したファイルをペースト
-" S-m 移動したファイルを選択して移動させたいフォルダに移動してS-pで移動
-" S-k フォルダ作成
-" S-n ファイル作成
-" カレントディレクトリを変更したい場合はactionのcdを実行する。GFilesCwd の検索ディレクトリがそのディレクトリになるので便利。
-
-" }}}
-
-" ferret {{{
-
-" :Ack pattern   現在の作業ディレクトリ配下を検索
-" :Ack pattern % 現在のファイルを検索
-" :Back pattern  バッファ一覧を検索
-" :Acks /置換前/置換後/ quickfix内の文字列を置換する
-" ferretで追加されるキーマッピング
-"   SPC - a :Ack を入力している状態になる
-"   SPC - s カーソル下の文字列を:Ackする
-"   SPC - r 置換する ※使わないので現在はfzf.vimのコマンドで上書き
-" quickfix内で使えるようになるキーマッピング
-"   dd quickfixの結果から行削除
-"   d  ビジュアルモードでquickfixの結果から行削除
-
-" }}}
-
-" efm-langserver {{{
-
-" Lintツールがlanguage-serverになるため、リアルタイムでLintの結果を受けながらコーディングできる
-" efm-langserverの設定はvim-efm-langserver-settings任せでゼロコンフィグ
-" Lintツールとconfigファイルを下記を参考に用意する
-" ref: https://github.com/tsuyoshicho/vim-efm-langserver-settings#support-command
-
-" }}}
-
-" vim-floaterm {{{
-
-" ターミナルモード時に使うコマンド
-"   C-w : コマンドラインモードに切り替え(例：C-s : の後に FloatermKill!)
-"   C-w N ターミナルモードに切り替え
-
-" }}}
+call map(
+  \ sort(split(globpath(&runtimepath, 'config/*.vim'))),
+  \ {-> execute('exec "source" v:val') }
+  \ )
