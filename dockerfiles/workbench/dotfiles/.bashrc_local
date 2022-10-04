@@ -25,6 +25,7 @@ if command -v rbenv &> /dev/null; then eval "$(rbenv init -)"; fi;
 # fzf
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 HISTCONTROL=erasedups # 重複したコマンドは保存しない
+export FZF_DEFAULT_OPTS='--layout=reverse'
 
 # golang
 export GOPATH=$HOME/go
@@ -114,4 +115,4 @@ FZF-EOF"
 # alias
 ########################################################################################################################
 alias g="git"
-alias lg="lazygit"
+alias lz="lazygit"

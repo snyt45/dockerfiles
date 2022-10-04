@@ -10,9 +10,9 @@ let g:which_key_use_floating_win = 0
 
 " ----------------------------------------------------------------------------------------------------------------------
 " Prefix Key s
-" window
+" windows
 " ----------------------------------------------------------------------------------------------------------------------
-let g:which_key_map_window = { 'name' : '+window' }
+let g:which_key_map_window = { 'name' : '+windows' }
 call which_key#register('s', 'g:which_key_map_window')
 nnoremap s :<c-u>WhichKey 's'<CR>
 vnoremap s :<c-u>WhichKeyVisual 's'<CR>
@@ -58,29 +58,29 @@ vnoremap <leader> :<c-u>WhichKeyVisual '<leader>'<CR>
 
 " ----------------------------------------------------------------------------------------------------------------------
 " Prefix Key <Leader>b
-" buffer
+" buffers
 " ----------------------------------------------------------------------------------------------------------------------
 let g:which_key_map.b = {
-  \ 'name' : '+buffer'                                         ,
-  \ 'b'    : [':FzfPreviewBuffersRpc'                          , 'buffers'],
-  \ 'o'    : [':FzfPreviewFromResourcesRpc buffer project_mru' , 'project mru'],
-  \ 'n'    : [':bnext'                                         , 'next'],
-  \ 'p'    : [':bprevious'                                     , 'previous'],
-  \ 'd'    : [':bd'                                            , 'destroy'],
+  \ 'name' : '+buffers'    ,
+  \ 'b'    : [':Buffers'   , 'buffers'],
+  \ 'n'    : [':bnext'     , 'next'],
+  \ 'p'    : [':bprevious' , 'previous'],
+  \ 'd'    : [':bd'        , 'destroy'],
   \ }
 
 " ----------------------------------------------------------------------------------------------------------------------
 " Prefix Key <Leader>f
-" file
+" files
 " ----------------------------------------------------------------------------------------------------------------------
 let g:which_key_map.f = {
-  \ 'name'  : '+file'                                          ,
-  \ 'e'     : [':Fern . -reveal=%'                             , 'open explorer'],
-  \ 't'     : [':Fern . -drawer -stay -keep -toggle -reveal=%' , 'toggle filetree'],
-  \ 'f'     : [':FzfPreviewProjectGrepRpc .'                   , 'grep'],
-  \ 'p'     : [':FzfPreviewFromResourcesRpc project_mru git'   , 'project mru'],
-  \ 'j'     : [':FzfPreviewJumpsRpc'                           , 'jumplist'],
-  \ '/'     : [':FzfPreviewLinesRpc --add-fzf-arg=--no-sort'   , 'line'],
+  \ 'name' : '+files'                                         ,
+  \ 'e'    : [':Fern . -reveal=%'                             , 'open explorer'],
+  \ 't'    : [':Fern . -drawer -stay -keep -toggle -reveal=%' , 'toggle filetree'],
+  \ 'g'    : [':FzfPreviewGitStatusRpc'                       , 'git files'],
+  \ 'f'    : [':Rg'                                           , 'grep'],
+  \ 'h'    : [':History'                                      , 'history'],
+  \ 'p'    : [':GFilesCwd'                                    , 'project files'],
+  \ '/'    : [':FzfPreviewLinesRpc --add-fzf-arg=--no-sort'   , 'line'],
   \}
 
 " ----------------------------------------------------------------------------------------------------------------------
@@ -110,8 +110,8 @@ let g:which_key_map.g = {
   \ 'a'    : [':FzfPreviewGitActionsRpc'     , 'action'],
   \ 'l'    : [':FzfPreviewGitCurrentLogsRpc' , 'current logs'],
   \ 'b'    : [':Git blame'                   , 'blame'],
-  \ 'j'    : [':GitGutterPrevHunk'           , 'pevious hunk'],
-  \ 'k'    : [':GitGutterNextHunk'           , 'next hunk'],
+  \ 'k'    : [':GitGutterPrevHunk'           , 'pevious hunk'],
+  \ 'j'    : [':GitGutterNextHunk'           , 'next hunk'],
   \ 'p'    : [':GitGutterPreviewHunk'        , 'preview hunk'],
   \ 's'    : [':GitgutterStageHunk'          , 'stage hunk'],
   \ 't'    : [':GitGutterToggle'             , 'toggle gitgutter'],
@@ -134,13 +134,14 @@ let g:which_key_map.M = {
 " lsp
 " ----------------------------------------------------------------------------------------------------------------------
 let g:which_key_map.l = {
-  \ 'name' : '+lsp'                     ,
-  \ 'a'    : [':LspCodeAction'          , 'code action'],
-  \ 'd'    : [':LspDocumentDiagnostics' , 'diagnostics'],
-  \ 'f'    : [':LspDocumentFormat'      , 'format'],
-  \ 'h'    : [':LspHover'               , 'hover'],
-  \ 'l'    : [':LspCodeLens'            , 'code Lens'],
-  \ 'r'    : [':LspRename'              , 'rename symbol'],
+  \ 'name' : '+lsp'                            ,
+  \ 'a'    : [':LspCodeAction'                 , 'code action'],
+  \ 'd'    : [':LspDocumentDiagnostics'        , 'diagnostics'],
+  \ 'f'    : [':LspDocumentFormat'             , 'format'],
+  \ 'h'    : [':LspHover'                      , 'hover'],
+  \ 'l'    : [':LspCodeLens'                   , 'code Lens'],
+  \ 'r'    : [':LspRename'                     , 'rename symbol'],
+  \ '/'    : [':FzfPreviewVimLspReferencesRpc' , 'fzf references'],
   \ }
 
 " ----------------------------------------------------------------------------------------------------------------------
@@ -174,7 +175,7 @@ let g:which_key_map.p = {
 " LocalLeader key map bindings
 " ----------------------------------------------------------------------------------------------------------------------
 let g:which_key_local_map = {}
-call which_key#register(',', 'g:which_key_local_map')
+call which_key#register('/', 'g:which_key_local_map')
 nnoremap <localleader> :<c-u>WhichKey '<localleader>'<CR>
 vnoremap <localleader> :<c-u>WhichKeyVisual '<localleader>'<CR>
 
@@ -194,11 +195,21 @@ let g:which_key_local_map.g = {
   \ }
 
 " ----------------------------------------------------------------------------------------------------------------------
-" Prefix Key <localleader>f
-" floaterm
+" Prefix Key <localleader>t
+" terminal
 " ----------------------------------------------------------------------------------------------------------------------
-let g:which_key_local_map.f = {
-  \ 'name' : '+floaterm'                                                    ,
+let g:which_key_local_map.t = {
+  \ 'name' : '+terminal'                                                    ,
   \ 't'    : [':FloatermNew --autoclose=2 --height=0.9 --width=0.9'         , 'terminal'],
-  \ 'g'    : [':FloatermNew --autoclose=2 --height=0.9 --width=0.9 lazygit' , 'lazygit'],
+  \ 'z'    : [':FloatermNew --autoclose=2 --height=0.9 --width=0.9 lazygit' , 'lazygit'],
+  \ }
+
+" ----------------------------------------------------------------------------------------------------------------------
+" Prefix Key <localleader>/
+" util
+" ----------------------------------------------------------------------------------------------------------------------
+let g:which_key_local_map['/'] = {
+  \ 'name' : '+util'                         ,
+  \ 'j'    : [':FzfPreviewJumpsRpc'          , 'jumplist'],
+  \ 'r'    : [':FzfPreviewCommandPaletteRpc' , 'command history'],
   \ }

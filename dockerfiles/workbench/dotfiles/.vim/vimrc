@@ -55,6 +55,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'                       " 画面左端のサイン列にgit diffマーカーを表示
 Plug 'rhysd/accelerated-jk'                         " jkでの移動を高速にする
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " Vimでfzfを使えるようにする
+  Plug 'junegunn/fzf.vim'
   Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/rpc' }
 Plug 'lambdalisue/nerdfont.vim'                     " Windows側にnerdfontをインストールしている必要あり
 Plug 'lambdalisue/fern.vim'                         " ファイルエクスプローラー
@@ -73,6 +74,7 @@ Plug 'tsuyoshicho/vim-efm-langserver-settings'      " efm-langserverをゼロコ
 Plug 'prabirshrestha/asyncomplete.vim'              " 非同期オートコンプリート
 Plug 'prabirshrestha/asyncomplete-lsp.vim'          " asyncomplete.vimのsource
 Plug 'voldikss/vim-floaterm'                        " フロートウィンドウでターミナルを開く
+Plug 'thinca/vim-qfreplace'                         " quickfixの置換
 
 call plug#end()
 
