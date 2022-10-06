@@ -175,7 +175,7 @@ let g:which_key_map.p = {
 " LocalLeader key map bindings
 " ----------------------------------------------------------------------------------------------------------------------
 let g:which_key_local_map = {}
-call which_key#register('/', 'g:which_key_local_map')
+call which_key#register(',', 'g:which_key_local_map')
 nnoremap <localleader> :<c-u>WhichKey '<localleader>'<CR>
 vnoremap <localleader> :<c-u>WhichKeyVisual '<localleader>'<CR>
 
@@ -205,11 +205,12 @@ let g:which_key_local_map.t = {
   \ }
 
 " ----------------------------------------------------------------------------------------------------------------------
-" Prefix Key <localleader>/
+" Prefix Key <localleader>,
 " util
 " ----------------------------------------------------------------------------------------------------------------------
-let g:which_key_local_map['/'] = {
+let g:which_key_local_map[','] = {
   \ 'name' : '+util'                         ,
+  \ 'c'    : [':CopyFilePath'                , 'copy filepath'],
   \ 'j'    : [':FzfPreviewJumpsRpc'          , 'jumplist'],
   \ 'r'    : [':FzfPreviewCommandPaletteRpc' , 'command history'],
   \ }
