@@ -199,9 +199,9 @@ let g:which_key_local_map.g = {
 " terminal
 " ----------------------------------------------------------------------------------------------------------------------
 let g:which_key_local_map.t = {
-  \ 'name' : '+terminal'                                                    ,
-  \ 't'    : [':FloatermNew --autoclose=2 --height=0.9 --width=0.9'         , 'terminal'],
-  \ 'z'    : [':FloatermNew --autoclose=2 --height=0.9 --width=0.9 lazygit' , 'lazygit'],
+  \ 'name' : '+terminal'             ,
+  \ 't'    : [':FloatermNew'         , 'terminal'],
+  \ 'z'    : [':FloatermNew lazygit' , 'lazygit'],
   \ }
 
 " ----------------------------------------------------------------------------------------------------------------------
