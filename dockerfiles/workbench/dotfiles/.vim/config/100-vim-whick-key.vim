@@ -2,7 +2,7 @@ if empty(globpath(&rtp, 'autoload/which_key.vim'))
   finish
 endif
 
-set timeoutlen=100
+set timeoutlen=500 " 100msだと他のキーマッピングが上手く動かないため500msに設定
 
 let g:which_key_ignore_outside_mappings = 1 " 辞書にないマッピングは非表示にする
 let g:which_key_sep = '→'
@@ -14,8 +14,8 @@ let g:which_key_use_floating_win = 0
 " ----------------------------------------------------------------------------------------------------------------------
 let g:which_key_map_window = { 'name' : '+windows' }
 call which_key#register('s', 'g:which_key_map_window')
-nnoremap s :<c-u>WhichKey 's'<CR>
-vnoremap s :<c-u>WhichKeyVisual 's'<CR>
+nmap s :<c-u>WhichKey 's'<CR>
+vmap s :<c-u>WhichKeyVisual 's'<CR>
 
 let g:which_key_map_window.s    = [':sp'              , 'split horizontaly']
 let g:which_key_map_window.v    = [':vs'              , 'split verticaly']
@@ -38,23 +38,23 @@ let g:which_key_map_window['+'] = [':resize +15'      , 'resize up']
 " ----------------------------------------------------------------------------------------------------------------------
 let g:which_key_map_tabs = { 'name' : '+tabs' }
 call which_key#register('t', 'g:which_key_map_tabs')
-nnoremap t :<c-u>WhichKey 't'<CR>
-vnoremap t :<c-u>WhichKeyVisual 't'<CR>
+nmap t :<c-u>WhichKey 't'<CR>
+vmap t :<c-u>WhichKeyVisual 't'<CR>
 
-let g:which_key_map_tabs.n = [':tabedit'      , 'new']
-let g:which_key_map_tabs.t = [':tab split'    , 'split']
-let g:which_key_map_tabs.h = [':tabprev'      , 'focus left']
-let g:which_key_map_tabs.l = [':tabnext'      , 'focus right']
-let g:which_key_map_tabs.H = ['<C-w>:-tabmove', 'move left']
-let g:which_key_map_tabs.L = ['<C-w>:+tabmove', 'move right']
+let g:which_key_map_tabs.n = [':tabedit'   , 'new']
+let g:which_key_map_tabs.t = [':tab split' , 'split']
+let g:which_key_map_tabs.h = [':tabprev'   , 'focus left']
+let g:which_key_map_tabs.l = [':tabnext'   , 'focus right']
+let g:which_key_map_tabs.H = [':tabmove -1', 'move left']
+let g:which_key_map_tabs.L = [':tabmove +1', 'move right']
 
 " ----------------------------------------------------------------------------------------------------------------------
 " Leader key map bindings
 " ----------------------------------------------------------------------------------------------------------------------
 let g:which_key_map = {}
 call which_key#register('<Space>', 'g:which_key_map')
-nnoremap <leader> :<c-u>WhichKey '<leader>'<CR>
-vnoremap <leader> :<c-u>WhichKeyVisual '<leader>'<CR>
+nmap <leader> :<c-u>WhichKey '<leader>'<CR>
+vmap <leader> :<c-u>WhichKeyVisual '<leader>'<CR>
 
 " ----------------------------------------------------------------------------------------------------------------------
 " Prefix Key <Leader>b
@@ -74,13 +74,17 @@ let g:which_key_map.b = {
 " ----------------------------------------------------------------------------------------------------------------------
 let g:which_key_map.f = {
   \ 'name' : '+files'                                         ,
+  \ 'b'    : [':Git blame'                                    , 'blame'],
+  \ 'c'    : [':BCommits'                                     , 'current commits'],
   \ 'e'    : [':Fern . -reveal=%'                             , 'open explorer'],
   \ 't'    : [':Fern . -drawer -stay -keep -toggle -reveal=%' , 'toggle filetree'],
-  \ 'g'    : [':FzfPreviewGitStatusRpc'                       , 'git files'],
+  \ 'g'    : [':GFiles?'                                      , 'git status files'],
+  \ 'l'    : [':BLines'                                       , 'line'],
+  \ 'j'    : [':FzfPreviewJumpsRpc'                           , 'jumplist'],
   \ 'f'    : [':Rg'                                           , 'grep'],
   \ 'h'    : [':History'                                      , 'history'],
   \ 'p'    : [':GFilesCwd'                                    , 'project files'],
-  \ '/'    : [':FzfPreviewLinesRpc --add-fzf-arg=--no-sort'   , 'line'],
+  \ '/'    : [':History/'                                     , 'search history'],
   \}
 
 " ----------------------------------------------------------------------------------------------------------------------
@@ -99,23 +103,6 @@ let g:which_key_map.F = {
   \ '4'    : [':set foldlevel=4'  , 'level4'],
   \ '5'    : [':set foldlevel=5'  , 'level5'],
   \ '6'    : [':set foldlevel=6'  , 'level6']
-  \ }
-
-" ----------------------------------------------------------------------------------------------------------------------
-" Prefix Key <Leader>g
-" git
-" ----------------------------------------------------------------------------------------------------------------------
-let g:which_key_map.g = {
-  \ 'name' : '+git'                          ,
-  \ 'a'    : [':FzfPreviewGitActionsRpc'     , 'action'],
-  \ 'l'    : [':FzfPreviewGitCurrentLogsRpc' , 'current logs'],
-  \ 'b'    : [':Git blame'                   , 'blame'],
-  \ 'k'    : [':GitGutterPrevHunk'           , 'pevious hunk'],
-  \ 'j'    : [':GitGutterNextHunk'           , 'next hunk'],
-  \ 'p'    : [':GitGutterPreviewHunk'        , 'preview hunk'],
-  \ 's'    : [':GitgutterStageHunk'          , 'stage hunk'],
-  \ 't'    : [':GitGutterToggle'             , 'toggle gitgutter'],
-  \ 'u'    : [':GitGutterUndoHunk'           , 'undo hunk']
   \ }
 
 " ----------------------------------------------------------------------------------------------------------------------
@@ -172,18 +159,10 @@ let g:which_key_map.p = {
   \ }
 
 " ----------------------------------------------------------------------------------------------------------------------
-" LocalLeader key map bindings
-" ----------------------------------------------------------------------------------------------------------------------
-let g:which_key_local_map = {}
-call which_key#register(',', 'g:which_key_local_map')
-nnoremap <localleader> :<c-u>WhichKey '<localleader>'<CR>
-vnoremap <localleader> :<c-u>WhichKeyVisual '<localleader>'<CR>
-
-" ----------------------------------------------------------------------------------------------------------------------
-" Prefix Key <localleader>g
+" Prefix Key <Leader>q
 " quickfix
 " ----------------------------------------------------------------------------------------------------------------------
-let g:which_key_local_map.g = {
+let g:which_key_map.q = {
   \ 'name' : '+quickfix'               ,
   \ 'n'    : [':cn'                    , 'next line'],
   \ 'p'    : [':cnf'                   , 'previous line'],
@@ -193,6 +172,14 @@ let g:which_key_local_map.g = {
   \ 'c'    : [':cclose'                , 'close'],
   \ 'q'    : [':FzfPreviewQuickFixRpc' , 'search'],
   \ }
+
+" ----------------------------------------------------------------------------------------------------------------------
+" LocalLeader key map bindings
+" ----------------------------------------------------------------------------------------------------------------------
+let g:which_key_local_map = {}
+call which_key#register(',', 'g:which_key_local_map')
+nmap <localleader> :<c-u>WhichKey '<localleader>'<CR>
+vmap <localleader> :<c-u>WhichKeyVisual '<localleader>'<CR>
 
 " ----------------------------------------------------------------------------------------------------------------------
 " Prefix Key <localleader>t
@@ -211,6 +198,6 @@ let g:which_key_local_map.t = {
 let g:which_key_local_map[','] = {
   \ 'name' : '+util'                         ,
   \ 'c'    : [':CopyFilePath'                , 'copy filepath'],
-  \ 'j'    : [':FzfPreviewJumpsRpc'          , 'jumplist'],
+  \ 'm'    : [':Maps'                        , 'mappings'],
   \ 'r'    : [':FzfPreviewCommandPaletteRpc' , 'command history'],
   \ }
