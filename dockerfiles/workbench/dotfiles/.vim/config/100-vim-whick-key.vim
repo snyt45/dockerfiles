@@ -78,12 +78,13 @@ let g:which_key_map.f = {
   \ 'c'    : [':BCommits'                                     , 'current commits'],
   \ 'e'    : [':Fern . -reveal=%'                             , 'open explorer'],
   \ 't'    : [':Fern . -drawer -stay -keep -toggle -reveal=%' , 'toggle filetree'],
-  \ 'g'    : [':GFiles?'                                      , 'git status files'],
+  \ 'g'    : [':Rgglob'                                       , 'grep glob pattern'],
   \ 'l'    : [':BLines'                                       , 'line'],
   \ 'j'    : [':FzfPreviewJumpsRpc'                           , 'jumplist'],
   \ 'f'    : [':Rg'                                           , 'grep'],
   \ 'h'    : [':History'                                      , 'history'],
   \ 'p'    : [':GFilesCwd'                                    , 'project files'],
+  \ 's'    : [':GFiles?'                                      , 'git status files'],
   \ '/'    : [':History/'                                     , 'search history'],
   \}
 
