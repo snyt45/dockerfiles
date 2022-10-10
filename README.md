@@ -185,6 +185,36 @@ fi
 SETTING
 ```
 
+#### 9. GitHub CLI対応
+
+アカウント毎に設定を行う。
+
+参考: https://gist.github.com/yermulnik/017837c01879ed3c7489cc7cf749ae47
+
+`mkdir -p ~/.config/gh && vi ~/.config/gh/config.yml`
+```
+git_protocol: ssh
+aliases:
+    personal: '!cp ~/.config/gh/hosts.yml.personal ~/.config/gh/hosts.yml && gh auth status'
+    work: '!cp ~/.config/gh/hosts.yml.work ~/.config/gh/hosts.yml && gh auth status'
+```
+
+`mkdir -p ~/.config/gh && vi ~/.config/gh/hosts.yml.personal`
+```
+github.com:
+    oauth_token: ghp_[…]
+    git_protocol: ssh
+    user: yuta.sano
+```
+
+`mkdir -p ~/.config/gh && vi ~/.config/gh/hosts.yml.work`
+```
+github.com:
+    oauth_token: ghp_[…]
+    git_protocol: ssh
+    user: yuta.sano
+```
+
 ### 作業用コンテナ側
 
 #### 1. Git Setting

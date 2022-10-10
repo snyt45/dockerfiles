@@ -36,6 +36,8 @@ ifeq ($(TGT), $(WORKBENCH))
 	runopt+= --mount type=bind,src=$(HOME)/.ssh,dst=$(HOME)/.ssh
 	# マウントオプション gitconfig
 	runopt+= --mount type=bind,src=$(HOME)/.gitconfig,dst=$(HOME)/.gitconfig
+	# マウントオプション gh
+	runopt+= --mount type=bind,src=$(HOME)/.config/gh,dst=$(HOME)/.config/gh
 else
 	runopt=-u `id -u`:`id -g`
 endif
