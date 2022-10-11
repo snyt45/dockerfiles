@@ -90,9 +90,10 @@ RUN LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygi
     curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" && \
     sudo tar xf lazygit.tar.gz -C /usr/local/bin lazygit
 # delta
-RUN sudo wget https://github.com/dandavison/delta/releases/download/0.4.1/delta-0.4.1-x86_64-unknown-linux-musl.tar.gz && \
-    sudo tar -zxvf delta-0.4.1-x86_64-unknown-linux-musl.tar.gz && \
-    cd delta-0.4.1-x86_64-unknown-linux-musl && \
+
+RUN sudo wget https://github.com/dandavison/delta/releases/download/0.14.0/delta-0.14.0-x86_64-unknown-linux-musl.tar.gz && \
+    sudo tar -zxvf delta-0.14.0-x86_64-unknown-linux-musl.tar.gz && \
+    cd delta-0.14.0-x86_64-unknown-linux-musl && \
     sudo mv ./delta /usr/local/bin
 # GitHub CLI
 RUN type -p curl >/dev/null || sudo apt install curl -y && \
