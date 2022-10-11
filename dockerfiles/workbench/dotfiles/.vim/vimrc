@@ -61,7 +61,7 @@ Plug 'lambdalisue/nerdfont.vim'                     " Windows側にnerdfontを�
 Plug 'lambdalisue/fern.vim'                         " ファイルエクスプローラー
   Plug 'lambdalisue/fern-renderer-nerdfont.vim'     " ファイル横にアイコン表示
   Plug 'lambdalisue/fern-git-status.vim'            " ファイル横にGitの状態表示
-Plug 'tomtom/tcomment_vim'                          " コメントアウト
+Plug 'tyru/caw.vim'                                 " コメントアウト
 Plug 'junegunn/vim-easy-align'                      " いい感じにインデントを揃える
 Plug 'vim-denops/denops.vim'
   Plug 'skanehira/denops-translate.vim'             " 選択範囲を翻訳
@@ -75,6 +75,7 @@ Plug 'prabirshrestha/asyncomplete.vim'              " 非同期オートコン�
 Plug 'prabirshrestha/asyncomplete-lsp.vim'          " asyncomplete.vimのsource
 Plug 'voldikss/vim-floaterm'                        " フロートウィンドウでターミナルを開く
 Plug 'thinca/vim-qfreplace'                         " quickfixの置換
+Plug 'liuchengxu/vista.vim'                         " LSP シンボル、タグを表示および検索
 
 call plug#end()
 

@@ -35,7 +35,8 @@ RUN apt update && apt upgrade -y && \
       zoxide \
       golang \
       python3-pip \
-      shellcheck
+      shellcheck \
+      universal-ctags
 # Docker
 # ref: https://matsuand.github.io/docs.docker.jp.onthefly/engine/install/ubuntu/
 # リポジトリのセットアップ
