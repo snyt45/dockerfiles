@@ -27,10 +27,10 @@ let g:which_key_map_window.H    = ['<C-w>H'           , 'move left']
 let g:which_key_map_window.J    = ['<C-w>J'           , 'move down']
 let g:which_key_map_window.K    = ['<C-w>K'           , 'move up']
 let g:which_key_map_window.L    = ['<C-w>L'           , 'move right']
-let g:which_key_map_window['<'] = [':vert resize -15 ', 'resize left']
-let g:which_key_map_window['>'] = [':vert resize +15' , 'resize right']
-let g:which_key_map_window['-'] = [':resize -15'      , 'resize down']
-let g:which_key_map_window['+'] = [':resize +15'      , 'resize up']
+let g:which_key_map_window['<'] = [':vert resize -10 ', 'resize left']
+let g:which_key_map_window['>'] = [':vert resize +10' , 'resize right']
+let g:which_key_map_window['-'] = [':resize -10'      , 'resize down']
+let g:which_key_map_window['+'] = [':resize +10'      , 'resize up']
 
 " ----------------------------------------------------------------------------------------------------------------------
 " Prefix Key t
