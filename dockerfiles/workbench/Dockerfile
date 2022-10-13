@@ -36,7 +36,8 @@ RUN apt update && apt upgrade -y && \
       golang \
       python3-pip \
       shellcheck \
-      universal-ctags
+      universal-ctags \
+      rbenv
 # Docker
 # ref: https://matsuand.github.io/docs.docker.jp.onthefly/engine/install/ubuntu/
 # リポジトリのセットアップ
@@ -103,6 +104,11 @@ RUN type -p curl >/dev/null || sudo apt install curl -y && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
     sudo apt update && \
     sudo apt install gh -y
+# rbenv
+RUN mkdir -p "$(rbenv root)"/plugins && \
+    git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build && \
+    rbenv install 3.1.2 && \
+    rbenv global 3.1.2
 
 ########################################################################################################################
 # ファイル追加・権限
