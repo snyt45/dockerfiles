@@ -40,6 +40,12 @@ if has('vim_starting')
     let &t_SR .= "\e[4 q" " 置換モード時に非点滅の下線タイプのカーソル
 endif
 
+" バッファに入るか、フォーカスを取得するときにリロード
+augroup vimrc_vim_check_file_change
+  autocmd!
+  autocmd FocusGained,BufEnter * :checktime
+augroup END
+
 " ----------------------------------------------------------------------------
 " PLUGINS
 " ----------------------------------------------------------------------------
