@@ -41,7 +41,7 @@ call which_key#register('t', 'g:which_key_map_tabs')
 nmap t :<c-u>WhichKey 't'<CR>
 vmap t :<c-u>WhichKeyVisual 't'<CR>
 
-let g:which_key_map_tabs.n = [':tabedit'   , 'new']
+let g:which_key_map_tabs.e = [':tabedit'   , 'new']
 let g:which_key_map_tabs.t = [':tab split' , 'split']
 let g:which_key_map_tabs.h = [':tabprev'   , 'focus left']
 let g:which_key_map_tabs.l = [':tabnext'   , 'focus right']
