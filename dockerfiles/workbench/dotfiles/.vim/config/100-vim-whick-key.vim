@@ -75,17 +75,15 @@ let g:which_key_map.b = {
 let g:which_key_map.f = {
   \ 'name' : '+files'                                         ,
   \ 'b'    : [':Git blame'                                    , 'blame'],
-  \ 'c'    : [':BCommits'                                     , 'current commits'],
   \ 'e'    : [':Fern . -reveal=%'                             , 'open explorer'],
   \ 't'    : [':Fern . -drawer -stay -keep -toggle -reveal=%' , 'toggle filetree'],
   \ 'g'    : [':Rgglob'                                       , 'grep glob pattern'],
-  \ 'l'    : [':BLines'                                       , 'line'],
-  \ 'j'    : [':FzfPreviewJumpsRpc'                           , 'jumplist'],
+  \ 'l'    : [':BCommits'                                     , 'current logs'],
   \ 'f'    : [':Rg'                                           , 'grep'],
   \ 'h'    : [':History'                                      , 'history'],
   \ 'p'    : [':GFilesCwd'                                    , 'project files'],
   \ 's'    : [':GFiles?'                                      , 'git status files'],
-  \ '/'    : [':History/'                                     , 'search history'],
+  \ '/'    : [':BLines'                                       , 'line'],
   \}
 
 " ----------------------------------------------------------------------------------------------------------------------
@@ -211,6 +209,8 @@ let g:which_key_local_map.t = {
 let g:which_key_local_map[','] = {
   \ 'name' : '+util'                         ,
   \ 'c'    : [':CopyFilePath'                , 'copy filepath'],
+  \ 'j'    : [':FzfPreviewJumpsRpc'          , 'jump history'],
   \ 'm'    : [':Maps'                        , 'mappings'],
   \ 'r'    : [':FzfPreviewCommandPaletteRpc' , 'command history'],
+  \ '/'    : [':History/'                    , 'search history'],
   \ }
