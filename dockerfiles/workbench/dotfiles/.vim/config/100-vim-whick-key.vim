@@ -211,6 +211,7 @@ let g:which_key_local_map[','] = {
   \ 'c'    : [':CopyFilePath'                , 'copy filepath'],
   \ 'j'    : [':FzfPreviewJumpsRpc'          , 'jump history'],
   \ 'm'    : [':Maps'                        , 'mappings'],
+  \ 's'    : [':Git'                         , 'git status'],
   \ 'r'    : [':FzfPreviewCommandPaletteRpc' , 'command history'],
   \ '/'    : [':History/'                    , 'search history'],
   \ }

@@ -4,10 +4,10 @@ endif
 
 let g:lsp_diagnostics_enabled = 1       " Diagnosticsを有効にする
 let g:lsp_diagnostics_echo_cursor = 1   " カーソル下のエラー、警告、情報、ヒントを画面下部のコマンドラインに表示
-let g:lsp_diagnostics_echo_delay = 200
+let g:lsp_diagnostics_echo_delay = 50
 let g:lsp_diagnostics_float_cursor = 1  " カーソル下のエラー、警告、情報、ヒントをフロート表示
 let g:lsp_diagnostics_signs_enabled = 1 " 画面左端のサイン列にエラー、警告、情報、ヒントのアイコンを表示
-let g:lsp_diagnostics_signs_delay = 200
+let g:lsp_diagnostics_signs_delay = 50
 let g:lsp_diagnostics_signs_insert_mode_enabled = 0
 " let g:lsp_diagnostics_signs_error = {'text': '👾'}
 " let g:lsp_diagnostics_signs_warning = {'text': '💣️'}
