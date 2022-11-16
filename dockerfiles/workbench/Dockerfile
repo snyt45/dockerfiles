@@ -128,6 +128,8 @@ RUN mkdir -p /home/${local_whoami}/.shared_cache/bash/ && \
     touch /home/${local_whoami}/.shared_cache/bash/bash_history && \
     chmod 600 /home/${local_whoami}/.shared_cache/bash/bash_history && \
     ln -s /home/${local_whoami}/.shared_cache/bash/bash_history /home/${local_whoami}/.bash_history
+# volta
+RUN sudo mv /home/${local_whoami}/.volta /home/${local_whoami}/.shared_cache/.volta
 
 ########################################################################################################################
 # シンボリックリンク作成

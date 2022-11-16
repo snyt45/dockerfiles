@@ -16,7 +16,7 @@ if command -v zoxide &> /dev/null; then eval "$(zoxide init bash)"; fi;
 export _ZO_DATA_DIR="$HOME/.shared_cache/zoxide/"
 
 # volta
-export VOLTA_HOME="$HOME/.volta"
+export VOLTA_HOME="$HOME/.shared_cache/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 
 # rbenv
