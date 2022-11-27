@@ -14,3 +14,11 @@ function! Rgglob(query, fullscreen)
 endfunction
 
 command! -nargs=* Rgglob call Rgglob("", 0)
+
+" ref: https://zenn.dev/kato_k/articles/vim-tips-no004
+command! Profile call s:command_profile()
+function! s:command_profile() abort
+  profile start ~/profile.txt
+  profile func *
+  profile file *
+endfunction
