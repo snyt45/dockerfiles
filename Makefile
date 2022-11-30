@@ -6,6 +6,7 @@ WORKBENCH=workbench
 # makeコマンドの引数
 TGT=$(target)
 PORT=${port}
+NOCACHE=${nocache}
 
 ## env
 # ローカルの環境変数をimport
@@ -44,16 +45,19 @@ endif
 ifneq ($(PORT), )
 	portopt= -p 127.0.0.1:$(PORT):$(PORT)
 endif
+ifneq ($(NOCACHE), )
+	buildopt+= --no-cache
+endif
 
 .PHONY: all
-all: repopull start attach ## [Default] repopull -> start -> attach の順に実行
+all: start attach ## [Default] start -> attach の順に実行
 
 .PHONY: repopull
 repopull: ## dockerfilesのrepoをgit pull
 	git pull
 
 .PHONY: build
-build: ## docker imageをbuild
+build: repopull ## docker imageをbuild
 ifeq ($(TGT), )
 	@echo "not set target. usage: make <operation> target=<your target>"
 	@exit 1
