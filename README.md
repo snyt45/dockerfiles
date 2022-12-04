@@ -240,6 +240,15 @@ make target="workbench"
   - 作業用コンテナが存在しない場合はgit pullする
   - 作業用コンテナのイメージが存在しない場合はイメージをビルドする
 
+### 初回のみvoltaをshared_cacheに移動する
+
+ホームディレクトリからshared_cacheに移動することで永続化できる。
+
+```
+make target="workbench"
+sudo mv ~/.volta ~/.shared_cache/
+```
+
 ### Dockerfileや構成ファイルの設定を反映させたい場合
 
 一度コンテナを削除してビルドし直したうえでアタッチする。
