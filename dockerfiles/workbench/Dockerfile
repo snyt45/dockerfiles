@@ -13,18 +13,13 @@ ARG password=password
 ########################################################################################################################
 # apt高速化
 RUN sed -i 's@archive.ubuntu.com@ftp.jaist.ac.jp/pub/Linux@g' /etc/apt/sources.list
-# apt-fast
-RUN apt-get update && apt-get install -y \
+# rootユーザーで実施。この後作成するユーザーだとライブラリによってインストールが進行しないことがあったため。
+RUN apt update && apt install -y \
     software-properties-common && \
     rm -rf /var/lib/apt/lists/*
-RUN add-apt-repository ppa:apt-fast/stable
-RUN apt-get update && apt install -y \
-    apt-fast \
-    && apt-fast clean && rm -rf /var/lib/apt/lists/*
-# rootユーザーで実施。この後作成するユーザーだとライブラリによってインストールが進行しないことがあったため。
 RUN add-apt-repository -y ppa:jonathonf/vim
-RUN apt-fast update && \
-    DEBIAN_FRONTEND=noninteractive apt-fast install -y \
+RUN apt update && \
+    DEBIAN_FRONTEND=noninteractive apt install -y \
       tzdata \
       language-pack-ja \
       sudo \
@@ -48,8 +43,8 @@ RUN apt-fast update && \
 # Docker
 # ref: https://matsuand.github.io/docs.docker.jp.onthefly/engine/install/ubuntu/
 # リポジトリのセットアップ
-RUN apt-fast update && \
-    apt-fast install -y \
+RUN apt update && \
+    apt install -y \
       ca-certificates \
       curl \
       gnupg \
@@ -59,8 +54,8 @@ RUN echo \
       "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
       $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 # Docker Engineのインストール
-RUN apt-fast update && \
-    apt-fast install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+RUN apt update && \
+    apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
 ########################################################################################################################
 # ユーザー作成 & 切替
@@ -106,12 +101,12 @@ RUN sudo wget https://github.com/dandavison/delta/releases/download/0.14.0/delta
     cd delta-0.14.0-x86_64-unknown-linux-musl && \
     sudo mv ./delta /usr/local/bin
 # GitHub CLI
-RUN type -p curl >/dev/null || sudo apt-fast install curl -y && \
+RUN type -p curl >/dev/null || sudo apt install curl -y && \
     curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
     sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
-    sudo apt-fast update && \
-    sudo apt-fast install gh -y
+    sudo apt update && \
+    sudo apt install gh -y
 # rbenv
 RUN mkdir -p "$(rbenv root)"/plugins && \
     git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build && \
