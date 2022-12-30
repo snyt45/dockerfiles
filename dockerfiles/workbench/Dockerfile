@@ -36,7 +36,6 @@ RUN apt update && \
       bat \
       zoxide \
       golang \
-      python3-pip \
       rbenv
 # Docker
 # ref: https://matsuand.github.io/docs.docker.jp.onthefly/engine/install/ubuntu/
