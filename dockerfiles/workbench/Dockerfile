@@ -86,7 +86,6 @@ RUN ["/bin/bash", "-l", "-c", "volta install yarn"]
 # efm-langserver
 RUN go install github.com/mattn/efm-langserver@latest
 # Lint
-RUN ["/bin/bash", "-l", "-c", "pip install vim-vint"]
 RUN sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.10.0/hadolint-Linux-x86_64 && \
     sudo chmod +x /bin/hadolint
 # lazygit
@@ -142,7 +141,6 @@ RUN ln -sf /etc/dotfiles/.bashrc /home/${local_whoami}/ && \
 RUN sudo ln -s /etc/dotfiles/bin/ide /usr/local/bin/
 RUN sudo ln -s /etc/dotfiles/bin/clip.sh /usr/local/bin/
 RUN sudo ln -s /etc/dotfiles/bin/code /usr/local/bin/
-RUN sudo ln -s /home/${local_whoami}/.local/bin/vint /usr/local/bin/
 # deno
 RUN sudo ln -s /home/${local_whoami}/.deno/bin/deno /usr/local/bin/deno
 # lazygit
