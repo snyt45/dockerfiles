@@ -37,7 +37,6 @@ RUN apt update && \
       zoxide \
       golang \
       python3-pip \
-      shellcheck \
       universal-ctags \
       rbenv
 # Docker
