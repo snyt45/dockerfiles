@@ -85,9 +85,6 @@ RUN ["/bin/bash", "-l", "-c", "volta install node"]
 RUN ["/bin/bash", "-l", "-c", "volta install yarn"]
 # efm-langserver
 RUN go install github.com/mattn/efm-langserver@latest
-# Lint
-RUN sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.10.0/hadolint-Linux-x86_64 && \
-    sudo chmod +x /bin/hadolint
 # lazygit
 RUN LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[0-36.]+') && \
     curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" && \
