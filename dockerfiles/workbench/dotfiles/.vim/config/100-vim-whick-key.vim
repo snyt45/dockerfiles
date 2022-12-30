@@ -176,13 +176,13 @@ let g:which_key_map.q = {
 " Prefix Key <Leader>v
 " Vista
 " ----------------------------------------------------------------------------------------------------------------------
-let g:which_key_map.v = {
-  \ 'name' : '+Vista'          ,
-  \ 'c'    : [':Vista ctags'   , 'ctags'],
-  \ 'l'    : [':Vista vim_lsp' , 'LSP symbols'],
-  \ 'v'    : [':Vista!!'       , 'toggle'],
-  \ '/'    : [':BTags'         , 'search'],
-  \ }
+" let g:which_key_map.v = {
+"   \ 'name' : '+Vista'          ,
+"   \ 'c'    : [':Vista ctags'   , 'ctags'],
+"   \ 'l'    : [':Vista vim_lsp' , 'LSP symbols'],
+"   \ 'v'    : [':Vista!!'       , 'toggle'],
+"   \ '/'    : [':BTags'         , 'search'],
+"   \ }
 
 " ----------------------------------------------------------------------------------------------------------------------
 " LocalLeader key map bindings

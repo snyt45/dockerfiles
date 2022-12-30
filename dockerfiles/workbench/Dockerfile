@@ -37,7 +37,6 @@ RUN apt update && \
       zoxide \
       golang \
       python3-pip \
-      universal-ctags \
       rbenv
 # Docker
 # ref: https://matsuand.github.io/docs.docker.jp.onthefly/engine/install/ubuntu/
