@@ -82,8 +82,8 @@ Plug 'prabirshrestha/asyncomplete-lsp.vim'          " asyncomplete.vimのsource
 Plug 'voldikss/vim-floaterm'                        " フロートウィンドウでターミナルを開く
 Plug 'thinca/vim-qfreplace'                         " quickfixの置換
 " Plug 'liuchengxu/vista.vim'                         " LSP シンボル、タグを表示および検索
-Plug 'xolox/vim-misc'
-  Plug 'xolox/vim-session'                          " セッション保存・復元
+" Plug 'xolox/vim-misc'
+"   Plug 'xolox/vim-session'                          " セッション保存・復元
 
 call plug#end()
 
