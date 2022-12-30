@@ -24,18 +24,34 @@
 
 WSL2セットアップ済みであること。
 
-セットアップ方法は[こちら](https://github.com/snyt45/windows11-dotfiles#6-wsl2%E3%81%AE%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97%E3%82%92%E8%A1%8C%E3%81%86)
+セットアップ方法は[こちら](https://github.com/snyt45/windows11-dotfiles)
 
 ### WSL側
 
 TODO: setup用のスクリプトを作る。
 
+#### 0. WSL Setting
+WSLディストリビューションの設定を行う。
+
+1. `/etc/wsl.conf`を編集する(`sudo vi /etc/wsl.conf`)
+```
+[network]
+generateResolvConf = false
+```
+
+2. `/etc/resolv.conf`を編集する(`sudo vi /etc/resolv.conf`)
+```
+nameserver 8.8.8.8
+```
+
+3. WSLを再起動する(`wsl --shutdown`)
+
 #### 1. Git Setting
 gitconfigの設定を行う。
 
 ```
-git config --global user.name "メインアカウント"
-git config --global user.email "メインアカウントメールアドレス"
+git config --global user.name "global"
+git config --global user.email "global@example.com"
 git config --global core.editor vim
 ```
 
@@ -68,77 +84,47 @@ source ~/.bashrc
 
 #### 5. 共有用ディレクトリを作成する
 
-```
-mkdir -p ~/work/ && mkdir -p ~/.shared_cache/
-```
-
 | Dir | 説明 |
 | --- | --- |
 | ~/work/ | 作業データ共有用のディレクトリ |
 | ~/.shared_cache/ | 作業用コンテナで作業時のキャッシュを残すためのディレクトリ |
 
+```
+mkdir -p ~/work/ && mkdir -p ~/.shared_cache/
+```
+
+
 #### 6. Git認証用のSSHディレクトリを作成する
-
-参考：https://mykii.blog/use-many-github-accounts-by-ssh/
-
-```
-# メインアカウントのSSH鍵を作成
-mkdir -p ~/.ssh && cd ~/.ssh
-ssh-keygen -t ed25519 -C "メインアカウントのメールアドレス" -f "メインアカウントのファイル名"
-cat {メインアカウントのファイル名}.pub # GitHubのSSH鍵に登録
-
-# サブアカウントのSSH鍵を作成
-ssh-keygen -t ed25519 -C "サブアカウントのメールアドレス" -f "サブアカウントのファイル名"
-cat {サブアカウントのファイル名}.pub # GitHubのSSH鍵に登録
-```
-
-```
-vim ~/.ssh/config
-```
-
-config
-```
-Host github-{メインアカウント}
-	HostName github.com
-	User {メインアカウントのユーザー名}
-	IdentityFile ~/.ssh/{メインアカウントの秘密鍵}
-	IdentitiesOnly yes
-Host github-{サブアカウント}
-	HostName github.com
-	User {サブアカウントのユーザー名}
-	IdentityFile ~/.ssh/{サブアカウントの秘密鍵}
-	IdentitiesOnly yes
-```
-
-```
-# 作成確認
-ssh -T git@github-{メインアカウント用の名前}
-ssh -T git@github-{サブアカウント用の名前}
-
-# clone
-cd ~/work
-
-git clone git@github-{メインアカウント}:{ID}/{リポジトリ名}.git
-git clone git@github-{サブアカウント}:{ID}/{リポジトリ名}.git
-```
 
 | Dir | 説明 |
 | --- | --- |
 | ~/.ssh/ | Git認証用のSSH鍵を置くディレクトリ |
 
-#### 7. クリップボード対応
-作業コンテナ内のクリップボードをホスト側に共有するための対応です。
-※Vimでヤンクした内容は自動でホスト側に共有するようにvimrcに設定済みです。
+```
+mkdir -p ~/.ssh/
+```
 
-参考：https://snyt45.com/uzCcEFHUw
+`.ssh`配下にSSH鍵と`config`ファイルをコピーしてくる。
 
-Install
+SSH鍵は適切なパーミッションに変更する
+```
+chmod 600 main
+```
 
+#### 7. WSL側の情報をホスト側に送信できるようにする
+
+require
 ```
 sudo apt install socat
 ```
 
- ~/.bashrcに追加
+<details>
+<summary>クリップボード対応</summary>
+
+作業コンテナ内のクリップボードをホスト側に共有するための対応です。
+※Vimでヤンクした内容は自動でホスト側に共有するようにvimrcに設定済みです。
+
+`~/.bashrc`に追加
 
 ```
 cat <<'SETTING' >> ~/.bashrc
@@ -158,17 +144,18 @@ trap hndl_SIGHUP SIGHUP
 SETTING
 ```
 
-#### 8. VSCode対応
+参考：https://snyt45.com/uzCcEFHUw
+</details>
+
+
+
+<details>
+<summary>VSCode対応</summary>
+
 作業コンテナ内で`code .`を実行すると、ホスト側で`code .`を実行するための対応です。
 ※ホスト側で`code .`を実行する仕組みのため、コンテナとホスト側でバインドマウントしているディレクトリのみ開けます。
 
-Install
-
-```
-sudo apt install socat
-```
-
- ~/.bashrcに追加
+`~/.bashrc`に追加
 
 ```
 cat <<'SETTING' >> ~/.bashrc
@@ -184,12 +171,194 @@ if [[ $(command -v socat > /dev/null; echo $?) == 0 ]]; then
 fi
 SETTING
 ```
+</details>
 
-#### 9. GitHub CLI対応
+### 作業用コンテナ側
 
+#### 1. Git Setting
+
+プロジェクト毎に設定を行う。
+
+```
+git config --local user.name "pj.tarou"
+git config --local user.email "pj@example.com"
+```
+
+## make操作コマンド
+
+<details>
+<summary>作業用コンテナのイメージをビルド</summary>
+```
+make build target="workbench"
+```
+</details>
+
+
+<details>
+<summary>作業用コンテナのイメージを削除</summary>
+```
+make clean target="workbench"
+```
+</details>
+
+
+<details>
+<summary>作業用コンテナを起動&アタッチ</summary>
+```
+make target="workbench"
+```
+
+makeコマンドでtargetを指定してコンテナを起動し、作業用コンテナにアタッチして作業を開始する。
+</details>
+
+
+<details>
+<summary>作業用コンテナを削除</summary>
+```
+make stop target="workbench"
+```
+
+makeコマンドでtargetを指定してコンテナを削除する。
+</details>
+
+
+<details>
+<summary>全てのdocker imageを削除</summary>
+```
+make allrmi
+```
+</details>
+
+
+<details>
+<summary>全てのdocker containerを削除</summary>
+```
+make allrm
+```
+</details>
+
+
+<details>
+<summary>makeコマンドのヘルプを表示</summary>
+```
+make help
+```
+</details>
+
+
+## 作業Memo
+
+<details>
+<summary>voltaを永続化する方法</summary>
+
+ホームディレクトリから `shared_cache` に移動する。
+```
+make target="workbench"
+sudo mv ~/.volta ~/.shared_cache/
+```
+
+`VOLTA_HOME`を`$HOME/.shared_cache/.volta`に設定しているため、
+この操作を一度行えば、次回以降は`shared_cache`側を見るようになる。
+
+</details>
+
+
+<details>
+<summary>Dockerfileや構成ファイルの設定を反映させる方法</summary>
+一度コンテナを削除してビルドし直したうえでアタッチする。
+
+```
+make stop target="workbench"
+make build target="workbench"
+make target="workbench"
+```
+</details>
+
+
+<details>
+<summary>作業用コンテナで起動したアプリケーションサーバにlocalhostでアクセスする方法(viteの場合)</summary>
+
+- 作業コンテナ起動時に公開するポートを指定する(`make target="workbench" port=3030`)
+- アプリケーションサーバ起動時、`0.0.0.0`でLISTENするよう変更する
+  - (例)viteの場合、yarn dev --host
+</details>
+
+<details>
+<summary>GitHubでSSH鍵を使った複数アカウントの対応</summary>
+
+1. メインとサブアカウントのSSH鍵を作成して、GihHubに登録します。
+
+```
+# メインアカウントのSSH鍵を作成
+mkdir -p ~/.ssh && cd ~/.ssh
+ssh-keygen -t ed25519 -C "main@example.com" -f "main"
+cat main.pub #=> GitHubのSSH鍵に登録
+
+# サブアカウントのSSH鍵を作成
+ssh-keygen -t ed25519 -C "sub@example.com" -f "sub"
+cat sub.pub #=> GitHubのSSH鍵に登録
+```
+
+2. `config`というファイルを作成して、アカウント毎に対応するSSH鍵を設定します。
+
+```
+vim ~/.ssh/config
+```
+
+[config]
+```
+Host github-main
+	HostName github.com
+	User main.tarou
+	IdentityFile ~/.ssh/main
+	IdentitiesOnly yes
+Host github-sub
+	HostName github.com
+	User sub.tarou
+	IdentityFile ~/.ssh/sub
+	IdentitiesOnly yes
+```
+
+3. 正しく設定できたか確認します。
+
+```
+# 作成確認
+ssh -T git@github-main
+ssh -T git@github-sub
+```
+
+参考：https://mykii.blog/use-many-github-accounts-by-ssh/
+</details>
+
+
+<details>
+<summary>GitHubにSSH接続してpushする方法(Clone前のリポジトリの場合)</summary>
+
+例）`git clone git@github-main:snyt45/dockerfiles.git`
+
+</details>
+
+
+<details>
+<summary>GitHubにSSH接続してpushする方法(Clone済みのリポジトリの場合)</summary>
+
+リポジトリに移動した状態で`git config -e`してurlを書き換える
+
+```
+// 書き換え前
+url = https://github.com/snyt45/dockerfiles.git
+
+// 書き換え後
+url = git@github-main:snyt45/dockerfiles.git
+```
+
+参考： https://msyksphinz.hatenablog.com/entry/2019/10/28/040000
+</details>
+
+
+<details>
+<summary>GitHub CLIの複数アカウント対応</summary>
 アカウント毎に設定を行う。
-
-参考: https://gist.github.com/yermulnik/017837c01879ed3c7489cc7cf749ae47
 
 `mkdir -p ~/.config/gh && vi ~/.config/gh/config.yml`
 ```
@@ -215,89 +384,8 @@ github.com:
     user: yuta.sano
 ```
 
-### 作業用コンテナ側
-
-#### 1. Git Setting
-
-プロジェクト毎に設定を行う。
-
-```
-git config --local user.name "サブアカウント"
-git config --local user.email "サブアカウントメールアドレス"
-```
-
-## 基本的なワークフロー
-
-### 作業用コンテナにアタッチ
-
-基本はmakeコマンドでtargetを指定して実行し、作業用コンテナにアタッチして作業を開始する。
-
-```
-make target="workbench"
-```
-
-- 作業用コンテナを起動して、コンテナにアタッチする
-  - 作業用コンテナが存在しない場合はgit pullする
-  - 作業用コンテナのイメージが存在しない場合はイメージをビルドする
-
-### 初回のみvoltaをshared_cacheに移動する
-
-ホームディレクトリからshared_cacheに移動することで永続化できる。
-
-```
-make target="workbench"
-sudo mv ~/.volta ~/.shared_cache/
-```
-
-### Dockerfileや構成ファイルの設定を反映させたい場合
-
-一度コンテナを削除してビルドし直したうえでアタッチする。
-
-```
-make stop target="workbench"
-make build target="workbench"
-make target="workbench"
-```
-
-### 作業用コンテナでアプリケーションサーバを起動する
-作業用コンテナで起動したアプリケーションサーバにlocalhostでアクセスするためには以下の2点を実施する必要があります。
-
-- `docker container run`時、`-p`オプションでコンテナのポート割り当てをする
-- アプリケーションサーバ起動時、`0.0.0.0`でLISTENするよう変更する
-  - (例)viteの場合、yarn dev --host
-
-### 既存のClone済みのリポジトリでSSH鍵を使う
-
-次のように url を書き換える。
-
-参考： https://msyksphinz.hatenablog.com/entry/2019/10/28/040000
-
-```
-git config -e
-
-// 書き換え前
-[remote "origin"]
-        url = https://github.com/snyt45/dockerfiles.git
-        fetch = +refs/heads/*:refs/remotes/origin/*
-
-// 書き換え後
-[remote "origin"]
-        url = git@github-snyt45:snyt45/dockerfiles.git
-        fetch = +refs/heads/*:refs/remotes/origin/*
-```
-
-## makeコマンド
-
-| コマンド | 説明 |
-| ---- | ---- |
-| make target="workbench" | repopull -> start -> attach の順に実行 |
-| make repopull target="workbench" | dockerfilesのrepoをpull |
-| make build target="workbench" | targetのdocker imagerをビルド |
-| make stop target="workbench" | targetのdocker containerを削除 |
-| make clean target="workbench" | targetのdocker imageを削除 |
-| make allrm | 全てのdocker containerを削除 |
-| make allrmi | 全てのdocker imageを削除 |
-| make help | ヘルプを表示 |
+参考: https://gist.github.com/yermulnik/017837c01879ed3c7489cc7cf749ae47
+</details>
 
 ## Inspire
 
