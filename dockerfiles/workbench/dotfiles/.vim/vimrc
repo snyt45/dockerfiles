@@ -76,7 +76,7 @@ Plug 'tpope/vim-rails'                              " Rails開発を便利にす
 Plug 'mattn/vim-maketable'                          " カンマ区切りのテキストテーブル表記に変換
 Plug 'prabirshrestha/vim-lsp'
 Plug 'mattn/vim-lsp-settings'                       " 各language-serverを1コマンドで導入できる
-Plug 'tsuyoshicho/vim-efm-langserver-settings'      " efm-langserverをゼロコンフィグで使える
+" Plug 'tsuyoshicho/vim-efm-langserver-settings'      " efm-langserverをゼロコンフィグで使える
 Plug 'prabirshrestha/asyncomplete.vim'              " 非同期オートコンプリート
 Plug 'prabirshrestha/asyncomplete-lsp.vim'          " asyncomplete.vimのsource
 Plug 'voldikss/vim-floaterm'                        " フロートウィンドウでターミナルを開く

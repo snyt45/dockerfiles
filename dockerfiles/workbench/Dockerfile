@@ -83,7 +83,7 @@ RUN ["/bin/bash", "-l", "-c", "curl https://get.volta.sh | bash"]
 RUN ["/bin/bash", "-l", "-c", "volta install node"]
 RUN ["/bin/bash", "-l", "-c", "volta install yarn"]
 # efm-langserver
-RUN go install github.com/mattn/efm-langserver@latest
+# RUN go install github.com/mattn/efm-langserver@latest
 # lazygit
 RUN LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[0-36.]+') && \
     curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" && \
