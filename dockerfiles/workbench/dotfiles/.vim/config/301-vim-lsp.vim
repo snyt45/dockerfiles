@@ -36,3 +36,7 @@ augroup END
 " debug
 " let g:lsp_log_verbose = 1 " ログを有効にする
 " let g:lsp_log_file = expand('~/.shared_cache/.vim/vim-lsp.log') " ログの出力先
+
+" hover scroll
+nnoremap <buffer> <expr><c-f> lsp#scroll(+4)
+nnoremap <buffer> <expr><c-b> lsp#scroll(-4)
