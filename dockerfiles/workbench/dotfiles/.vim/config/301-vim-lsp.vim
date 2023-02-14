@@ -2,6 +2,10 @@ if empty(globpath(&rtp, 'autoload/lsp.vim'))
   finish
 endif
 
+" hover scroll
+nnoremap <buffer> <expr><c-f> lsp#scroll(+4)
+nnoremap <buffer> <expr><c-b> lsp#scroll(-4)
+
 let g:lsp_diagnostics_enabled = 1       " Diagnosticsを有効にする
 let g:lsp_diagnostics_echo_cursor = 1   " カーソル下のエラー、警告、情報、ヒントを画面下部のコマンドラインに表示
 let g:lsp_diagnostics_echo_delay = 50
@@ -36,7 +40,3 @@ augroup END
 " debug
 " let g:lsp_log_verbose = 1 " ログを有効にする
 " let g:lsp_log_file = expand('~/.shared_cache/.vim/vim-lsp.log') " ログの出力先
-
-" hover scroll
-nnoremap <buffer> <expr><c-f> lsp#scroll(+4)
-nnoremap <buffer> <expr><c-b> lsp#scroll(-4)
