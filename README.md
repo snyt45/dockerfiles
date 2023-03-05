@@ -33,10 +33,16 @@ TODO: setup用のスクリプトを作る。
 #### 0. WSL Setting
 WSLディストリビューションの設定を行う。
 
+- DNSの名前解決に使うresolv.confの自動生成をOFF
+- WSLでsystemdを有効にする
+
 1. `/etc/wsl.conf`を編集する(`sudo vi /etc/wsl.conf`)
 ```
 [network]
 generateResolvConf = false
+
+[boot]
+systemd=true
 ```
 
 2. `/etc/resolv.conf`を編集する(`sudo vi /etc/resolv.conf`)
@@ -113,65 +119,62 @@ chmod 600 main
 
 #### 7. WSL側の情報をホスト側に送信できるようにする
 
-require
-```
-sudo apt install socat
-```
+名前付きパイプをDockerでマウントすることで、Dockerコンテナ側からホスト側に情報を送信できるようにします。
+
+参考：https://github.com/peccu/copy-from-container-in-wsl
 
 <details>
 <summary>クリップボード対応</summary>
 
 作業コンテナ内のクリップボードをホスト側に共有するための対応です。
+
 ※Vimでヤンクした内容は自動でホスト側に共有するようにvimrcに設定済みです。
 
-`~/.bashrc`に追加
+クリップボード用の名前付きパイプを作成します。
 
 ```
-cat <<'SETTING' >> ~/.bashrc
-if [[ $(command -v socat > /dev/null; echo $?) == 0 ]]; then
-    # Start up the socat forwarder to clip.exe
-    echo "Starting clipboard relay..."
-    (setsid socat tcp-listen:8121,fork,bind=0.0.0.0 EXEC:'clip.exe' &) > /dev/null 2>&1
-fi
-# bashを開いて1度目は日本語のコピーがうまくいく
-# bashを閉じて再度開くとsocatの子プロセスが動いたままのためなのかなぜか日本語のコピー時に文字化けする
-# bashを閉じるときにsocatの子プロセスをkillして、開くたびにsocatの子プロセスを作るようにすると文字化け問題が解消したので毎回bashを閉じるとkillしている
-function hndl_SIGHUP() {
-  kill -9 $(lsof -t -i :8121)
-  exit 1
-}
-trap hndl_SIGHUP SIGHUP
+[ -p ~/clip ] && echo already exists the pipe for clip || mkfifo ~/clip
+```
+
+`clip.sh`を作成します。
+
+```
+cat <<'SETTING' >> ~/clip.sh
+#!/bin/bash
+while true
+do
+  # 文字化け対応
+  # see: https://nodamushi.hatenablog.com/entry/2018/01/12/195253
+  cat $HOME/clip | iconv -f UTF-8 -t CP932 | /mnt/c/Windows/system32/clip.exe
+done
 SETTING
 ```
 
-参考：https://snyt45.com/uzCcEFHUw
-</details>
+パーミッションを設定します。
 
+```
+chmod +x ~/clip.sh
+```
 
+`crontab -e`でcrontabに書き込みます。
 
-<details>
-<summary>VSCode対応</summary>
+```
+@reboot $HOME/clip.sh
+```
 
-作業コンテナ内で`code .`を実行すると、ホスト側で`code .`を実行するための対応です。
-※ホスト側で`code .`を実行する仕組みのため、コンテナとホスト側でバインドマウントしているディレクトリのみ開けます。
-
-`~/.bashrc`に追加
+`.bashrc`でcrontabの起動チェックするようにします。
 
 ```
 cat <<'SETTING' >> ~/.bashrc
-if [[ $(command -v socat > /dev/null; echo $?) == 0 ]]; then
-    # Start up the socat forwarder to VScode
-    ALREADY_RUNNING_VSCODE=$(ps -auxww | grep -q "[l]isten:8122"; echo $?)
-    if [[ $ALREADY_RUNNING_VSCODE != "0" ]]; then
-        echo "Starting VScode relay..."
-        (setsid socat tcp-listen:8122,fork,bind=0.0.0.0 EXEC:'/bin/bash' &) > /dev/null 2>&1
-    else
-        echo "VScode relay already running"
-    fi
+if [[ -n `service cron status | grep not` ]];then
+  echo "cron is not running. Type password to run it."
+  sudo service cron start
 fi
 SETTING
 ```
+
 </details>
+
 
 ### 作業用コンテナ側
 
@@ -392,6 +395,63 @@ github.com:
 ```
 
 参考: https://gist.github.com/yermulnik/017837c01879ed3c7489cc7cf749ae47
+</details>
+
+<details>
+<summary>cronを有効にするためにsystemdを有効にする</summary>
+
+WSLで「/etc/wsl.conf」というファイルを作成する。
+
+以下の内容を記載する。
+
+```
+[boot]
+systemd=true
+```
+
+powershellでWSLをシャットダウンする。
+
+```
+wsl --shutdown
+```
+
+systemdがPID=1で起動していることを確認する。
+
+```
+ps -ae
+```
+
+参考： https://snowsystem.net/other/windows/wsl2-ubuntu-systemctl/
+</details>
+
+<details>
+<summary>cronのログを有効にする</summary>
+
+systemdがPID=1で起動していることを確認する。
+
+```
+ps -ae
+```
+
+ログを有効化するためにコメントアウトを外す。
+
+```
+vi /etc/rsyslog.d/50-default.conf
+```
+
+```
+#cron.*                   /var/log/cron.log     # 編集前
+  ↓
+cron.*                    /var/log/cron.log     # 編集後
+```
+
+ログを確認する。
+
+```
+cat /var/log/cron.log
+```
+
+参考： https://www.server-memo.net/ubuntu/ubuntu_cron_log.html
 </details>
 
 ## Inspire

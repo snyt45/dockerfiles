@@ -2,8 +2,8 @@
 for i in "$@"
 do
   case "$i" in
-  (.)
-    echo "code $PWD" | socat - tcp:host.docker.internal:8122
+  (-i|--input|-in)
+    tee <&0 > ~/clip
     exit 0
     ;;
   esac

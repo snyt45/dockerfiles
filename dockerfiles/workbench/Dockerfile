@@ -26,7 +26,6 @@ RUN apt update && \
       curl \
       wget \
       unzip \
-      socat \
       trash-cli \
       git \
       vim \
@@ -113,8 +112,7 @@ ADD ./entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN sudo chmod +x /usr/local/bin/entrypoint.sh
 ADD ./dotfiles /etc/dotfiles
 RUN sudo chmod +x /etc/dotfiles/bin/ide
-RUN sudo chmod +x /etc/dotfiles/bin/clip.sh
-RUN sudo chmod +x /etc/dotfiles/bin/code
+RUN sudo chmod +x /etc/dotfiles/bin/clip
 
 ########################################################################################################################
 # シンボリックリンク作成
@@ -135,8 +133,7 @@ RUN ln -sf /etc/dotfiles/.bashrc /home/${local_whoami}/ && \
     ln -s /etc/dotfiles/.tmux.conf /home/${local_whoami}/
 # bin
 RUN sudo ln -s /etc/dotfiles/bin/ide /usr/local/bin/
-RUN sudo ln -s /etc/dotfiles/bin/clip.sh /usr/local/bin/
-RUN sudo ln -s /etc/dotfiles/bin/code /usr/local/bin/
+RUN sudo ln -s /etc/dotfiles/bin/clip /usr/local/bin/
 # deno
 RUN sudo ln -s /home/${local_whoami}/.deno/bin/deno /usr/local/bin/deno
 # lazygit

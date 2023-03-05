@@ -12,7 +12,7 @@ map q <silent> " よくミスタイプするのでマクロ記録しないよう
 " ヤンクした内容をクリップボードにコピー
 augroup Yank
   au!
-  autocmd TextYankPost * :call system('clip.sh -i', @")
+  autocmd TextYankPost * :call system('clip -i', @")
 augroup END
 
 imap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"

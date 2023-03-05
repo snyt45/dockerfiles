@@ -1,5 +1,5 @@
 " カレントバッファのファイルパスをクリップボードにコピー
-command! CopyFilePath :echo "copied fullpath: " . expand('%:p') | let @"=expand('%:p') | call system('clip.sh -i', @")
+command! CopyFilePath :echo "copied fullpath: " . expand('%:p') | let @"=expand('%:p') | call system('clip -i', @")
 
 " fzfでカレントディレクトリ配下のgit管理ファイル検索
 command! -bang -nargs=? GFilesCwd
