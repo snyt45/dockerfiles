@@ -45,7 +45,7 @@ else
 	runopt=-u `id -u`:`id -g`
 endif
 ifneq ($(PORT), )
-	portopt= -p 127.0.0.1:$(PORT):$(PORT)
+	portopt= -p 0.0.0.0:$(PORT):$(PORT)
 endif
 ifneq ($(NOCACHE), )
 	buildopt+= --no-cache
