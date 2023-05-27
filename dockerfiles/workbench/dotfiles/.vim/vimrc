@@ -84,6 +84,8 @@ Plug 'thinca/vim-qfreplace'                         " quickfixの置換
 " Plug 'liuchengxu/vista.vim'                         " LSP シンボル、タグを表示および検索
 " Plug 'xolox/vim-misc'
 "   Plug 'xolox/vim-session'                          " セッション保存・復元
+Plug 'hrsh7th/vim-vsnip'                            " スニペット
+Plug 'hrsh7th/vim-vsnip-integ'
 
 call plug#end()
 

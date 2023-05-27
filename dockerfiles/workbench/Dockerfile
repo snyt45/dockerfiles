@@ -113,6 +113,8 @@ RUN mkdir -p /home/${local_whoami}/.vim/ && \
     curl -fLo /home/${local_whoami}/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 RUN mkdir -p /home/${local_whoami}/.vim/config && \
     for file in /etc/dotfiles/.vim/config/*; do ln -s ${file} /home/${local_whoami}/.vim/config; done
+RUN mkdir -p /home/${local_whoami}/.vim/snippets && \
+    for file in /etc/dotfiles/.vim/snippets/*; do ln -s ${file} /home/${local_whoami}/.vim/snippets; done
 # bash
 RUN ln -sf /etc/dotfiles/.bashrc /home/${local_whoami}/ && \
     ln -sf /etc/dotfiles/.bash_profile /home/${local_whoami}/ && \
