@@ -32,6 +32,9 @@ export FZF_DEFAULT_OPTS='--layout=reverse'
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
+# playwright
+export PLAYWRIGHT_BROWSERS_PATH=$HOME/.shared_cache/pw-browsers/
+
 ########################################################################################################################
 # カスタムコマンド
 ########################################################################################################################

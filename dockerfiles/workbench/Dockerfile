@@ -80,6 +80,7 @@ RUN curl -fsSL https://deno.land/install.sh | sh
 RUN ["/bin/bash", "-l", "-c", "curl https://get.volta.sh | bash"]
 RUN ["/bin/bash", "-l", "-c", "volta install node"]
 RUN ["/bin/bash", "-l", "-c", "volta install yarn"]
+RUN ["/bin/bash", "-l", "-c", "volta install npm"]
 # efm-langserver
 # RUN go install github.com/mattn/efm-langserver@latest
 # lazygit
@@ -91,6 +92,8 @@ RUN sudo wget https://github.com/dandavison/delta/releases/download/0.14.0/delta
     sudo tar -zxvf delta-0.14.0-x86_64-unknown-linux-musl.tar.gz && \
     cd delta-0.14.0-x86_64-unknown-linux-musl && \
     sudo mv ./delta /usr/local/bin
+# playwright
+RUN ["/bin/bash", "-l", "-c", "npx playwright install-deps"]
 
 ########################################################################################################################
 # ファイル追加・権限
