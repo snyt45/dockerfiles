@@ -15,18 +15,20 @@ export HOME
 
 ifeq ($(TGT), $(WORKBENCH))
 	## docker build時のオプション
-	# ローカルのuidを渡す
+	# 引数 ローカルのuidを渡す
 	buildopt= --build-arg local_uid=$(shell id -u ${USER})
-	# ローカルのgidを渡す
+	# 引数 ローカルのgidを渡す
 	buildopt+= --build-arg local_gid=$(shell id -g ${USER})
-	# ローカルのhomeを渡す
+	# 引数 ローカルのhomeを渡す
 	buildopt+= --build-arg local_home=$(HOME)
-	# ローカルのwhoamiを渡す
+	# 引数 ローカルのwhoamiを渡す
 	buildopt+= --build-arg local_whoami=$(shell whoami)
+	# 引数 ローカルのDockerのgidを渡す
+	buildopt+= --build-arg local_docker_gid=$(shell getent group docker | awk -F: '{print $$3}')
 
 	## docker run時のオプション
-	# 環境変数 LOCAL_GID LOCAL_HOME LOCAL_WHOAMI LOCAL_DOCKER_GID
-	runopt= -e LOCAL_GID=$(shell id -u ${USER}) -e LOCAL_HOME=$(HOME) -e LOCAL_WHOAMI=$(shell whoami) -e LOCAL_DOCKER_GID=$(shell getent group docker | awk -F: '{print $$3}')
+	# 環境変数 ローカルのwhoamiを渡す
+	runopt= -e LOCAL_WHOAMI=$(shell whoami)
 	# マウントオプション work
 	runopt+= --mount type=bind,src=$(HOME)/work,dst=$(HOME)/work
 	# マウントオプション shared_cache

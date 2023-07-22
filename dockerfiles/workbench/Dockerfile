@@ -1,5 +1,41 @@
-FROM ubuntu:23.04 AS workbench
-LABEL maintainer="snyt45@gmail.com"
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# ★base-image
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# NOTE: 基本的な設定はここで行う。変更が入ると後続のキャッシュが効かなくなるので極力変更が入らないレイヤーにする
+#       ビルドした成果物を最終イメージのみに含めて最終イメージを軽量化する使い方ではなく単純にレイヤーを分けて変更が少ない箇所と多い箇所を分けることが目的。
+FROM ubuntu:23.04 AS base-image
+
+ARG local_docker_gid
+
+# apt高速化
+RUN sed -i 's@archive.ubuntu.com@ftp.jaist.ac.jp/pub/Linux@g' /etc/apt/sources.list
+# 日本語locale
+RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
+    && localedef -i ja_JP -c -f UTF-8 -A /usr/share/locale/locale.alias ja_JP.UTF-8
+ENV LANG ja_JP.UTF-8
+# docker-outside-of-docker
+# ref: https://matsuand.github.io/docs.docker.jp.onthefly/engine/install/ubuntu/
+RUN apt-get update && \
+    apt-get install -y \
+      ca-certificates \
+      curl \
+      gnupg \
+      lsb-release && \
+      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
+     echo \
+     "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+     $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    apt-get update && \
+    apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+# dockerグループのgidをホストと同じにする
+RUN groupmod -g ${local_docker_gid} docker
+
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# ★workbench
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# NOTE: workbenchに必要なライブラリ等のインストールを行うレイヤー
+FROM base-image AS workbench
 
 ARG local_uid=9001
 ARG local_gid=9001
@@ -10,13 +46,9 @@ ARG password=password
 ########################################################################################################################
 # apt install
 ########################################################################################################################
-# apt高速化
-RUN sed -i 's@archive.ubuntu.com@ftp.jaist.ac.jp/pub/Linux@g' /etc/apt/sources.list
 # rootユーザーで実施。この後作成するユーザーだとライブラリによってインストールが進行しないことがあったため。
-RUN apt update && \
-    DEBIAN_FRONTEND=noninteractive apt install -y \
-      tzdata \
-      language-pack-ja \
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
       sudo \
       curl \
       wget \
@@ -29,23 +61,8 @@ RUN apt update && \
       ripgrep \
       bat \
       zoxide \
-      golang
-# Docker
-# ref: https://matsuand.github.io/docs.docker.jp.onthefly/engine/install/ubuntu/
-# リポジトリのセットアップ
-RUN apt update && \
-    apt install -y \
-      ca-certificates \
-      curl \
-      gnupg \
-      lsb-release
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-RUN echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-# Docker Engineのインストール
-RUN apt update && \
-    apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+      golang && \
+      apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ########################################################################################################################
 # ユーザー作成 & 切替
@@ -58,10 +75,12 @@ RUN echo "root:root" | chpasswd
 RUN groupadd -g ${local_gid} ${local_whoami}
 # ユーザー作成(uidが同じユーザーの作成を許す、ホームディレクトリ作成する、uid: ${local_uid}、gid(primary): ${local_gid}、 gid(secondary): sudo、ユーザー名: ${local_whoami})
 RUN useradd -o -m -u ${local_uid} -g ${local_gid} -G sudo ${local_whoami}
-# 作成したユーザーのパスワードを${password}に設定
+# ユーザーのパスワードを${password}に設定
 RUN echo ${local_whoami}:${password} | chpasswd
-# 作成したユーザーがパスワードなしでsudoコマンドを実行できるようにする
+# ユーザーがパスワードなしでsudoコマンドを実行できるようにする
 RUN echo "${local_whoami} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+# ユーザーをdockerグループに追加
+RUN gpasswd -a ${local_whoami} docker
 
 USER ${local_whoami}
 WORKDIR /home/${local_whoami}/
@@ -75,8 +94,6 @@ RUN sudo sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- --yes
 RUN ["/bin/bash", "-l", "-c", "curl https://get.volta.sh | bash"]
 RUN ["/bin/bash", "-l", "-c", "volta install node"]
 RUN ["/bin/bash", "-l", "-c", "volta install yarn"]
-# efm-langserver
-# RUN go install github.com/mattn/efm-langserver@latest
 # lazygit
 RUN LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[0-39.]+') && \
     curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" && \
@@ -95,6 +112,7 @@ RUN sudo chmod +x /usr/local/bin/entrypoint.sh
 ADD ./dotfiles /etc/dotfiles
 RUN sudo chmod +x /etc/dotfiles/bin/ide
 RUN sudo chmod +x /etc/dotfiles/bin/clip
+RUN sudo chown -R ${local_whoami}:${local_whoami} /etc/dotfiles/bin
 
 ########################################################################################################################
 # シンボリックリンク作成
@@ -121,23 +139,6 @@ RUN sudo ln -s /etc/dotfiles/bin/clip /usr/local/bin/
 # lazygit
 RUN mkdir -p /home/${local_whoami}/.config/lazygit && \
     ln -s /etc/dotfiles/.config/lazygit/config.yml /home/${local_whoami}/.config/lazygit
-
-########################################################################################################################
-# permission
-########################################################################################################################
-RUN sudo chown -R ${local_whoami}:${local_whoami} /etc/dotfiles && \
-    sudo chown -R ${local_whoami}:${local_whoami} "${local_home}"
-
-########################################################################################################################
-# 基本設定
-########################################################################################################################
-# タイムゾーンを東京に設定
-ENV TZ Asia/Tokyo
-# ロケールを日本語に設定
-# docker buildの途中に日本語になるとbuildが進行しない/エラーになるため最後に日本語化している
-ENV LANG ja_JP.UTF-8
-ENV LANGUAGE ja_JP.UTF-8
-ENV LC_ALL=ja_JP.UTF8
 
 # docker run実行時に毎回実行する
 # docker run時に環境変数やdocker.sockをマウントするため、このタイミングでdocker.sockなどに対して設定している
