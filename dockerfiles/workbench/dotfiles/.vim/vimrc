@@ -69,8 +69,6 @@ Plug 'lambdalisue/fern.vim'                         " ファイルエクスプ�
   Plug 'lambdalisue/fern-git-status.vim'            " ファイル横にGitの状態表示
 Plug 'tyru/caw.vim'                                 " コメントアウト
 Plug 'junegunn/vim-easy-align'                      " いい感じにインデントを揃える
-Plug 'vim-denops/denops.vim'
-  Plug 'skanehira/denops-translate.vim'             " 選択範囲を翻訳
 Plug 'andymass/vim-matchup'                         " 対応するテキストのペアの識別を強化
 Plug 'tpope/vim-rails'                              " Rails開発を便利にする
 Plug 'mattn/vim-maketable'                          " カンマ区切りのテキストテーブル表記に変換

@@ -74,8 +74,6 @@ WORKDIR /home/${local_whoami}/
 ########################################################################################################################
 # starship
 RUN sudo sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- --yes
-# deno
-RUN curl -fsSL https://deno.land/install.sh | sh
 # volta
 RUN ["/bin/bash", "-l", "-c", "curl https://get.volta.sh | bash"]
 RUN ["/bin/bash", "-l", "-c", "volta install node"]
@@ -123,8 +121,6 @@ RUN ln -sf /etc/dotfiles/.bashrc /home/${local_whoami}/ && \
 # bin
 RUN sudo ln -s /etc/dotfiles/bin/ide /usr/local/bin/
 RUN sudo ln -s /etc/dotfiles/bin/clip /usr/local/bin/
-# deno
-RUN sudo ln -s /home/${local_whoami}/.deno/bin/deno /usr/local/bin/deno
 # lazygit
 RUN mkdir -p /home/${local_whoami}/.config/lazygit && \
     ln -s /etc/dotfiles/.config/lazygit/config.yml /home/${local_whoami}/.config/lazygit
