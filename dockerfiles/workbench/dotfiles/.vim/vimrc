@@ -80,6 +80,7 @@ Plug 'voldikss/vim-floaterm'                        " フロートウィンド�
 Plug 'thinca/vim-qfreplace'                         " quickfixの置換
 Plug 'hrsh7th/vim-vsnip'                            " スニペット
 Plug 'hrsh7th/vim-vsnip-integ'
+Plug 'rust-lang/rust.vim'
 
 call plug#end()
 

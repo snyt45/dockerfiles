@@ -103,6 +103,10 @@ RUN sudo wget https://github.com/dandavison/delta/releases/download/0.14.0/delta
     sudo tar -zxvf delta-0.14.0-x86_64-unknown-linux-musl.tar.gz && \
     cd delta-0.14.0-x86_64-unknown-linux-musl && \
     sudo mv ./delta /usr/local/bin
+# rustup
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+# rustfmt
+RUN ["/bin/bash", "-l", "-c", "rustup component add rustfmt"]
 
 ########################################################################################################################
 # ファイル追加・権限
@@ -112,7 +116,7 @@ RUN sudo chmod +x /usr/local/bin/entrypoint.sh
 ADD ./dotfiles /etc/dotfiles
 RUN sudo chmod +x /etc/dotfiles/bin/ide
 RUN sudo chmod +x /etc/dotfiles/bin/clip
-RUN sudo chown -R ${local_whoami}:${local_whoami} /etc/dotfiles/bin
+RUN sudo chown -R ${local_whoami}:${local_whoami} /etc/dotfiles
 
 ########################################################################################################################
 # シンボリックリンク作成
