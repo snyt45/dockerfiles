@@ -1,11 +1,10 @@
-FROM ubuntu:22.04 AS workbench
+FROM ubuntu:23.04 AS workbench
 LABEL maintainer="snyt45@gmail.com"
 
 ARG local_uid=9001
 ARG local_gid=9001
 ARG local_home
 ARG local_whoami
-ARG local_docker_gid
 ARG password=password
 
 ########################################################################################################################
@@ -14,10 +13,6 @@ ARG password=password
 # apt高速化
 RUN sed -i 's@archive.ubuntu.com@ftp.jaist.ac.jp/pub/Linux@g' /etc/apt/sources.list
 # rootユーザーで実施。この後作成するユーザーだとライブラリによってインストールが進行しないことがあったため。
-RUN apt update && apt install -y \
-    software-properties-common && \
-    rm -rf /var/lib/apt/lists/*
-RUN add-apt-repository -y ppa:jonathonf/vim
 RUN apt update && \
     DEBIAN_FRONTEND=noninteractive apt install -y \
       tzdata \
@@ -55,6 +50,8 @@ RUN apt update && \
 ########################################################################################################################
 # ユーザー作成 & 切替
 ########################################################################################################################
+# ubuntu 23.04ではUID・GIDが1000のユーザーが既に存在するためIDを変更しておく
+RUN usermod -u 9999 ubuntu && groupmod -g 9999 ubuntu
 # rootユーザーのパスワードをrootに設定。rootユーザーに切替えたいとき用。
 RUN echo "root:root" | chpasswd
 # ホストと同じユーザーグループ作成(gid: ${local_gid}、グループ名: ${local_whoami})
